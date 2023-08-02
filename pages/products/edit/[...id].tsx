@@ -27,7 +27,7 @@ export default function EditProductPage() {
   },[id]);
   return(
     <Layout> 
-        <ProductForm {...product}/>   
+        <ProductForm head={"Edit Product"} {...product}/>   
     </Layout>
   )
 }

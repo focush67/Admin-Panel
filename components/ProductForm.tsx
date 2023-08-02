@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useRouter from "next/router";
 import axios from "axios";
 
-export default function ProductForm({
+export default function ProductForm(props:any,{
   title:existingTitle,description:existingDescription,price:existingPrice}:any) {
   const [title, setTitle] = useState(existingTitle || "Product Name");
   const [description, setDescription] = useState(existingDescription|| "Description");
@@ -25,7 +25,7 @@ export default function ProductForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
+      <h1 className="text-blue-900 mb-3 font-bold text-xl">{props.head}</h1>
       <label htmlFor="">
         Product Name
         <input
