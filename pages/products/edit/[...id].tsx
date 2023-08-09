@@ -1,33 +1,36 @@
 import Layout from "@/components/Layout";
-import { useSearchParams} from "next/navigation";
-import { useEffect, useState } from "react";
-import axios from 'axios';
+import {useSearchParams} from 'next/navigation';
+import {useEffect,useState} from 'react';
+import axios from "axios";
 import ProductForm from "@/components/ProductForm";
-export default function EditProductPage() {
-  const searchParams = useSearchParams();
-  const[product,setProduct] = useState({
-    id:"",
-    title:"",
-    description:"",
-    price:"",
-  }); 
-  const id = searchParams;
 
-  useEffect(() => {
-    axios.get(`/api/products?${id}`).then(response => {
-       setProduct({
-        title: response.data.title,
-        description: response.data.description,
-        price: response.data.price,
-      });
+export default function EditProductPage()
+{
+    const searchParams = useSearchParams();
+    const prodId = searchParams;
+    const [prod,setProd] = useState({
+        id:"",
+        existingTitle:"",
+        existingDescription:"",
+        existingPrice:"",
+        head:"Edit Product"
+    })
+    useEffect(() => {
+        axios.put(`/api/products?${prodId}`,prod).then(response => {
+            console.log(response);
+            setProd({
+                id:response.data._id,
+                existingTitle:response.data.title,
+                existingDescription:response.data.description,
+                existingPrice:response.data.price,
+                head:"Edit Product",
+            });
+        })
+    },[prodId])
 
-      
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[id]);
-  return(
-    <Layout> 
-        <ProductForm head={"Edit Product"} {...product}/>   
-    </Layout>
-  )
+    return(
+        <Layout>
+            <ProductForm {...prod}/>
+        </Layout>
+    )
 }

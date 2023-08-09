@@ -3,6 +3,6 @@ import ProductForm from "@/components/ProductForm";
 export default function NewProduct()
 {
     return(<Layout>    
-        <ProductForm head={"New Product"}/>
+        <ProductForm id={""} existingTitle={""} existingDescription={""} existingPrice={""} head={"New Product"}/>
     </Layout>)
 }

@@ -3,15 +3,31 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { DeleteButton } from "./products/delete/delButton";
 const Products = () => {
   const [products, setProducts] = useState([]);
+  
   useEffect(() => {
-    axios.get("/api/products").then((response) => {
+    const fetchData = async () => {
+      try{
+        axios.get("/api/products").then((response) => {
       setProducts(response.data);
     });
+      } catch(error:any)
+      {
+        console.log(error.message);
+      }
+    }
+
+    fetchData();
+    const interval = setInterval(fetchData,5000);
+    return () => {
+      clearInterval(interval);
+    }
   }, []);
 
- 
+  
+  
   return (
     <Layout>
       <Link
@@ -29,12 +45,12 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product:object) => (
+          {products.map((product: object) => (
             <tr>
               <td>{product.title}</td>
               <td>
-                <Link href={"/products/edit/" + product._id} 
-                >
+                <Link href={'/products/edit/'+ product._id}
+                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -51,6 +67,7 @@ const Products = () => {
                   </svg>
                   Edit
                 </Link>
+                <DeleteButton prodId = {product._id}/>
               </td>
             </tr>
           ))}

@@ -7,6 +7,7 @@ input,textarea{
     
 }
 
+
 input:focus{
     @apply border-blue-900
 }
@@ -36,6 +37,7 @@ table.basic thead tr td{
     @apply bg-blue-100 
 }
 
+
 table.basic a{
     @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
 }
@@ -43,3 +45,11 @@ table.basic a{
 table.basic a:hover{
      @apply bg-blue-900 text-white;
 }
+
+button{
+    @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
+}
+button:hover{
+     @apply bg-red-900 text-white;
+}
+
