@@ -16,8 +16,8 @@ export default function EditProductPage()
         head:"Edit Product"
     })
     useEffect(() => {
-        axios.put(`/api/products?${prodId}`,prod).then(response => {
-            console.log(response);
+        axios.get(`/api/products?${prodId}`).then(response => {
+            console.log(response.data);
             setProd({
                 id:response.data._id,
                 existingTitle:response.data.title,

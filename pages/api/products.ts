@@ -1,5 +1,6 @@
 import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
+import {useSearchParams} from 'next/navigation';
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
@@ -7,6 +8,7 @@ export default async function handle(request: any, response: any) {
 
 // GET REQUEST
   if (method === "GET") {
+    console.log("INSIDE GET");
     if (request.query?.id) {
       response.json(await Product.findOne({ _id: request.query?.id }));
     }
@@ -16,16 +18,13 @@ export default async function handle(request: any, response: any) {
 // PUT REQUEST
   if (method === "PUT") {
     try {
-        const {updatedTitle, updatedDescription, updatedPrice } = request.body.data;
-        console.log(request.body);
-        console.log(updatedTitle);
-        await Product.findByIdAndUpdate(request.query.id, {
-          title: updatedTitle,
-          description: updatedDescription,
-          price: updatedPrice,
-        });
+        const prodId = request.query.id;
+        console.log("INSIDE PUT");
+        const {title,description,price} = request.body;
+    
+         await Product.findByIdAndUpdate(prodId,{title,description,price});
 
-        console.log("Past updation steps");
+        
         return response.json({
           message: "Put request success",
           status: 200,
@@ -64,6 +63,7 @@ export default async function handle(request: any, response: any) {
 // DELETE REQUEST
   if (method === "DELETE") {
     try {
+      console.log("INSIDE DELETE");
       const id2 = request.query?.id;
       console.log(id2);
       await Product.findByIdAndDelete(id2);

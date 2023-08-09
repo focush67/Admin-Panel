@@ -1,19 +1,18 @@
 import { useState } from "react";
 import useRouter from "next/router";
 import axios from "axios";
+import {useSearchParams} from 'next/navigation';
 export default function ProductForm({
-  id,
   head,
   existingTitle,
   existingDescription,
-  existingPrice}:{id:string;existingTitle:string;existingDescription:string;existingPrice:string;head:string;}) {
-  
+  existingPrice}:{existingTitle:string;existingDescription:string;existingPrice:string;head:string;}) {
+  const productId = useSearchParams();
   const [title, setTitle] = useState(existingTitle || "Product");
   const [description, setDescription] = useState(existingDescription|| "Description");
   const [price, setPrice] = useState(existingPrice || "Price");
   const [redirectProd, setRedirectProd] = useState(false);
   const router = useRouter;
-  const productId = id;
   const handleSubmitNew = async (e: any) => {
     e.preventDefault();
     const data = { title, description, price };
@@ -28,9 +27,10 @@ export default function ProductForm({
   }
 
   const handleSubmitEdit = async(e:any) => {
+    alert(existingTitle+" "+existingDescription+" "+existingPrice);
     e.preventDefault();
     const data = {title,description,price};
-    console.log(productId);
+    
     if(productId)
     {
       await axios.put(`/api/products?${productId}`,data);
@@ -51,7 +51,8 @@ export default function ProductForm({
         <input
           type="text"
           name="Name"
-          placeholder={existingTitle}
+          // value={head === "New Product" ? "Name" : title}
+           placeholder={head === "New Product" ? "Name" : existingTitle}
           onChange={(e) => setTitle(e.target.value)}
         />
       </label>
@@ -60,17 +61,18 @@ export default function ProductForm({
         Description
         <textarea
           name="Description"
-          
-          placeholder={existingDescription}
-          onChange={e => setDescription(e.target.value)}
+          // value={head === "New Product" ? "Name" : description}
+          placeholder={head === "New Product" ? "Description" : existingDescription}
+          onChange={(e) => setDescription(e.target.value)}
         ></textarea>
       </label>
 
       <label htmlFor="">
-        Price
+        Price (USD)
         <input
           type="text"
-          placeholder={existingPrice}
+          placeholder={head === "New Product" ? "Price" : existingPrice}
+          // value={head === "New Product" ? "Name" : price}
           className="flex w-12"
           name="Price"
           onChange={(e) => setPrice(e.target.value)}
