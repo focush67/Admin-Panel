@@ -1,6 +1,5 @@
 import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
-import {useSearchParams} from 'next/navigation';
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
@@ -39,9 +38,9 @@ export default async function handle(request: any, response: any) {
 //POST REQUEST
   if (method === "POST") {
     try {
-      const { title, description, price } = request.body;
+      const {title, description, price} = request.body;
       console.log("Inside POST : "+title,description,price);
-      const productDoc = await Product.create({
+      await Product.create({
         title,
         description,
         price,
@@ -53,6 +52,7 @@ export default async function handle(request: any, response: any) {
         success: true,
       });
     } catch (error: any) {
+      console.log(error.message);
       return response.json({
         status: 500,
         message: "Some error occured",

@@ -17,12 +17,12 @@ label{
 }
 
 .btn-primary{
-    @apply text-black p-2 rounded-md mt-4 border-black transition-all
+    @apply text-black p-2 rounded-md mt-4 border-black transition-all w-full pl-[50%]
 }
 
 .btn-primary:hover{
     @apply text-white bg-blue-900
-    translate-y-1 ease-out
+    translate-y-1 ease-out 
 }
 
 table.basic{
@@ -46,10 +46,16 @@ table.basic a:hover{
      @apply bg-blue-900 text-white;
 }
 
+.btn-red{
+    @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
+}
+.btn-red:hover{
+     @apply bg-red-900 text-white;
+}
+
 button{
     @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
 }
-button:hover{
-     @apply bg-red-900 text-white;
-}
+
+
 

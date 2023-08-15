@@ -20,7 +20,7 @@ export  function DeleteButton(props:any)
     }
 
     return(
-        <button onClick={handleDelete}>
+        <button onClick={handleDelete} className="btn-red">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
