@@ -47,7 +47,6 @@ export default async function handle(request: any, response: any) {
 
       if(isThereAlready){
         console.log("Product already exists");
-        alert("Product already exists");
         return response.json({
           message:"User already exists",
           status:400,

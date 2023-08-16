@@ -1,8 +1,8 @@
 import Layout from "@/components/Layout";
-import ProductForm from "@/components/ProductForm";
+import NewForm from "@/components/NewProduct";
 export default function NewProduct()
 {
     return(<Layout>    
-        <ProductForm id={""} existingTitle={""} existingDescription={""} existingPrice={""} head={"New Product"}/>
+        <NewForm/>
     </Layout>)
 }

@@ -1,38 +1,35 @@
-import Layout from "@/components/Layout";
-import {useSearchParams} from 'next/navigation';
-import {useEffect,useState} from 'react';
+import { useEffect,useState } from "react";
 import axios from "axios";
-import ProductForm from "@/components/ProductForm";
+import Layout from "@/components/Layout";
+import EditForm from "@/components/EditForm";
+import { useSearchParams } from "next/navigation";
+export default function EditProductPage() {
+  const searchParams = useSearchParams();
+  const prodId = searchParams;
+  const [prod, setProd] = useState({
+    existingTitle: "",
+    existingDescription: "",
+    existingPrice: "",
+    exisitingImagesFolder: "",
+  });
 
-export default function EditProductPage()
-{
-    const searchParams = useSearchParams();
-    const prodId = searchParams;
-    const [prod,setProd] = useState({
-        id:"",
-        existingTitle:"",
-        existingDescription:"",
-        existingPrice:"",
-        head:"Edit Product",
-        images:"",
-    })
-    useEffect(() => {
-        axios.get(`/api/products?${prodId}`).then(response => {
-            console.log(response.data);
-            setProd({
-                id:response.data._id,
-                existingTitle:response.data.title,
-                existingDescription:response.data.description,
-                existingPrice:response.data.price,
-                head:"Edit Product",
-                images:response.data.imagesFolder,
-            });
-        })
-    },[prodId])
+  useEffect(() => {
+    axios.get(`/api/products?${prodId}`).then((response) => {
+      setProd({
+        existingTitle: response.data.title,
+        existingDescription: response.data.description,
+        existingPrice: response.data.price,
+        existingImagesFolder: response.data.imagesFolder,
+      });
+    });
+  }, [prodId]);
 
-    return(
-        <Layout>
-            <ProductForm {...prod}/>
-        </Layout>
-    )
+  useEffect(() => {
+  }, [prod]); // This watches for changes in the prod state
+
+  return (
+    <Layout>
+      <EditForm {...prod} />
+    </Layout>
+  );
 }

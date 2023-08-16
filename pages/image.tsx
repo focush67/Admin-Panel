@@ -21,7 +21,7 @@ export default function imageTester({title}:{title:string}) {
   }, [isUploaded]);
 
 
-  const uploadImage = () => {
+   const uploadImage = () => {
     const name = imageUpload?.name;
     if (imageUpload === null) return;
     console.log(name);
