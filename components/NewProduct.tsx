@@ -30,7 +30,7 @@ export default function NewForm()
 
             <label htmlFor="">
                 Description
-                <input type="text" name="Description" placeholder="About" required onChange={(e:any) => setDescription(e.target.value)}/>
+                <textarea name="Description" id="" value={description} onChange={(e:any) => setDescription(e.target.value)}></textarea>
             </label>
 
             <label htmlFor="">

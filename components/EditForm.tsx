@@ -72,7 +72,7 @@ export default function EditForm({
 
             <label htmlFor="">
                 Description
-                <input type="text" name="Description" value={description} onChange={(e:any) => setDescription(e.target.value)}/>
+                <textarea name="Description" value={description} onChange={(e:any) => setDescription(e.target.value)}></textarea>
             </label>
 
             <label htmlFor="">
