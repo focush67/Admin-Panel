@@ -38,12 +38,13 @@ export default async function handle(request: any, response: any) {
 //POST REQUEST
   if (method === "POST") {
     try {
-      const {title, description, price} = request.body;
-      console.log("Inside POST : "+title,description,price);
+      const {title, description, price , images} = request.body;
+      console.log("Inside POST : "+title,description,price,images);
       await Product.create({
         title,
         description,
         price,
+        images
       });
 
       return response.json({

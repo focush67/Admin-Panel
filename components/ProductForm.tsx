@@ -1,7 +1,6 @@
 import {useState} from "react";
 import useRouter from "next/router";
 import axios from "axios";
-import Link from 'next/link';
 import ImageTester from "@/pages/image";
 import { useSearchParams } from "next/navigation";
 
@@ -10,13 +9,11 @@ export default function ProductForm({
   existingTitle,
   existingDescription,
   existingPrice,
-  images,
 }: {
   existingTitle: string;
   existingDescription: string;
   existingPrice: string;
   head: string;
-  images: any;
 }) {
 
 
@@ -29,20 +26,18 @@ export default function ProductForm({
   const [price, setPrice] = useState(existingPrice || "Price");
   const [redirectProd, setRedirectProd] = useState(false);
   const router = useRouter;
-  const [imageUrls , setImageUrls] = useState<String>("sample");
 
   
-
 
 
  // ------ Handling New Product request ------
 
 
   const handleSubmitNew = async (e: any) => {
+    const images = title || "untitled";
     e.preventDefault();
-    
-    const data = {title, description, price,imageUrls};
-    alert(title+" "+description+" "+price+" "+imageUrls);
+    const data = {title, description, price , images};
+    alert(title+" "+description+" "+price+" "+images);
     const res = await axios.post("/api/products", data);
     console.log(res);
     setRedirectProd(true);

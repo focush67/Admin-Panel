@@ -4,6 +4,7 @@ const productSchema = new Schema({
     title : {type:String,required:true},
     description : String,
     price : {type:String,required:true},
+    images : {type:String,default:"images"},
 })
 
 const imageSchema = new Schema({
