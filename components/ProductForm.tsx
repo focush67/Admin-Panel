@@ -1,19 +1,23 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import useRouter from "next/router";
 import axios from "axios";
 import ImageTester from "@/pages/image";
 import { useSearchParams } from "next/navigation";
+import {getDownloadURL, listAll, ref } from "firebase/storage";
+import { storage } from "@/firebaseConfig";
 
 export default function ProductForm({
   head,
   existingTitle,
   existingDescription,
   existingPrice,
+  images,
 }: {
   existingTitle: string;
   existingDescription: string;
   existingPrice: string;
   head: string;
+  images:any,
 }) {
 
 
@@ -24,46 +28,45 @@ export default function ProductForm({
     existingDescription || "Description"
   );
   const [price, setPrice] = useState(existingPrice || "Price");
-  const [redirectProd, setRedirectProd] = useState(false);
-  const router = useRouter;
-
+  // const [redirectProd, setRedirectProd] = useState(false);  
+  // const router = useRouter;
+  const [imageList,setImageList] = useState([]);
+  const [isUploaded,setIsUploaded] = useState(false);
+  var imageListRef:any = "lorem";
   
-
-
  // ------ Handling New Product request ------
 
 
   const handleSubmitNew = async (e: any) => {
-    const images = title || "untitled";
+    const imagesFolder = title || "untitled";
+    imageListRef = ref(storage,`${images}`);
     e.preventDefault();
-    const data = {title, description, price , images};
-    alert(title+" "+description+" "+price+" "+images);
+    const data = {title, description, price , imagesFolder};
+    alert(title+" "+description+" "+price+" "+imagesFolder);
     const res = await axios.post("/api/products", data);
     console.log(res);
-    setRedirectProd(true);
+    // setRedirectProd(true);
   };
 
-  if (redirectProd) {
-    router.push("/products");
-    return;
-  }
+  
 
+  
 
 // -------- Handling Edit Request ----------
 
 
   const handleSubmitEdit = async (e: any) => {
-    alert(existingTitle + " " + existingDescription + " " + existingPrice);
+    imageListRef = ref(storage,`${title}`);
+    const imagesFolder = title;
+    alert(existingTitle + " " + existingDescription + " " + existingPrice+" "+imagesFolder);
     e.preventDefault();
-    const data = {title, description, price};
+    const data = {title, description, price,imagesFolder};
 
     if (productId) {
       await axios.put(`/api/products?${productId}`, data);
     } else {
       alert("Product doesn't exist");
     }
-
-    setRedirectProd(true);
   };
 
 
@@ -118,8 +121,6 @@ export default function ProductForm({
       <div>
         <ImageTester title={title} />
       </div>
-      
-
     </form>
   );
 }

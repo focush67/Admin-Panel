@@ -4,13 +4,9 @@ const productSchema = new Schema({
     title : {type:String,required:true},
     description : String,
     price : {type:String,required:true},
-    images : {type:String,default:"images"},
-})
-
-const imageSchema = new Schema({
-    folder : String,
+    imagesFolder : {type:String,default:"images"},
 })
 
 export const Product = (models.Product || model('Product',productSchema))
 
-export const Image = (models.Product || model('Image',imageSchema));
+

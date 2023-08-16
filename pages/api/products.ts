@@ -19,9 +19,11 @@ export default async function handle(request: any, response: any) {
     try {
         const prodId = request.query.id;
         console.log("INSIDE PUT");
-        const {title,description,price} = request.body;
-    
-         await Product.findByIdAndUpdate(prodId,{title,description,price});
+  
+        const {title,description,price,imagesFolder} = request.body;
+
+        console.log(title+" "+description+" "+price);  
+         await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder});
 
         
         return response.json({
@@ -38,13 +40,25 @@ export default async function handle(request: any, response: any) {
 //POST REQUEST
   if (method === "POST") {
     try {
-      const {title, description, price , images} = request.body;
-      console.log("Inside POST : "+title,description,price,images);
+      const {title, description, price , imagesFolder} = request.body;
+      console.log("Inside POST : "+title,description,price,imagesFolder);
+
+      const isThereAlready = await Product.findOne({title});
+
+      if(isThereAlready){
+        console.log("Product already exists");
+        alert("Product already exists");
+        return response.json({
+          message:"User already exists",
+          status:400,
+          success:false,
+        })
+      }
       await Product.create({
         title,
         description,
         price,
-        images
+        imagesFolder,
       });
 
       return response.json({

@@ -44,9 +44,10 @@ export default function imageTester({title}:{title:string}) {
         Upload
       </button>
 
-      <div className="w-32 h-auto flex flex-row gap-3 m-3 justify-between">
+      <div className="w-20 h-auto flex gap-3 m-3 justify-between flex-row-wrap bg-gray-900 rounded-lg">
         {imageList.map((url) => {
-          return <img src={url} alt="image" />;
+          // eslint-disable-next-line react/jsx-key
+          return <img src={url} alt="image" className="rounded-lg"/>;
         })}
       </div>
     </div>

@@ -13,7 +13,8 @@ export default function EditProductPage()
         existingTitle:"",
         existingDescription:"",
         existingPrice:"",
-        head:"Edit Product"
+        head:"Edit Product",
+        images:"",
     })
     useEffect(() => {
         axios.get(`/api/products?${prodId}`).then(response => {
@@ -24,6 +25,7 @@ export default function EditProductPage()
                 existingDescription:response.data.description,
                 existingPrice:response.data.price,
                 head:"Edit Product",
+                images:response.data.imagesFolder,
             });
         })
     },[prodId])
