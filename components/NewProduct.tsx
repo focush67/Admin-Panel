@@ -1,8 +1,5 @@
-import { useState,useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import axios from "axios";
-import {ref} from 'firebase/storage';
-import { storage } from "@/firebaseConfig";
 import ImageTester from "@/pages/image";
 export default function NewForm()
 {
@@ -16,26 +13,27 @@ export default function NewForm()
         alert(title+","+description+","+price+","+imagesFolder);
         const response = await axios.post("/api/products",data);
         console.log(response);
+        
     }
 
 
     return (
-        <form onSubmit={handleSubmitNew} className="bg-gray-200 overflow-hidden relative p-1">
+        <form onSubmit={handleSubmitNew} className="bg-gray-200 overflow-hidden relative p-1 min-h-screen">
             <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
-
-            <label htmlFor="">
+            
+            <label htmlFor="" className="font-bold text-black">
                 Product Name
-                <input type="text" name="Name" placeholder="Name" required onChange={(e:any) => setTitle(e.target.value)}/>
+                <input type="text" name="Name" placeholder="Name" required onChange={(e:any) => setTitle(e.target.value)} className="font-normal"/>
             </label>
 
-            <label htmlFor="">
+            <label htmlFor="" className="font-bold text-black">
                 Description
-                <textarea name="Description" id="" value={description} onChange={(e:any) => setDescription(e.target.value)}></textarea>
+                <textarea name="Description" id="" value={description} onChange={(e:any) => setDescription(e.target.value)} className="font-normal"></textarea>
             </label>
 
-            <label htmlFor="">
-                Price
-                <input type="text" name="Price" placeholder="0" required onChange={(e:any) => setPrice(e.target.value)}/>
+            <label htmlFor="" className="text-black font-bold">
+                Price (USD)
+                <input type="text" name="Price" placeholder="0" required onChange={(e:any) => setPrice(e.target.value)} className="font-normal"/>
             </label>
 
             <label htmlFor="">

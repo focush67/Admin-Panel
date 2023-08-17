@@ -44,17 +44,20 @@ page:string;}) {
       <input
         type="file"
         onChange={(event: any) => setImageUpload(event.target.files[0])}
-        className="cursor-pointer"
+        className=""
       />
-      <button onClick={uploadImage} className="btn-primary">
+      <button onClick={uploadImage} className=" bg-gray-300 relative text-lg font-bold btn-primary">
         Upload
       </button>
 
-      <div className="w-auto h-12 gap-2 flex rounded-lg justify-center mt-3">
+      <div className="gap-2 rounded-lg justify-center mt-3 flex flex-col text-center font-semibold">
+       
+        <div className="flex gap-2">
         {imageList.map((url) => {
           // eslint-disable-next-line react/jsx-key
-          return <img src={url} alt="image" className="rounded-lg"/>;
+          return <img src={url} alt="image" className="rounded-lg w-32 h-auto"/>;
         })}
+        </div>
       </div>
     </div>
   );

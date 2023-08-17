@@ -62,25 +62,25 @@ export default function EditForm({
 
 
     return (
-        <form onSubmit={handleSubmitEdit} className="bg-gray-200 overflow-hidden relative p-1">
+        <form onSubmit={handleSubmitEdit} className="bg-gray-200 overflow-hidden relative p-1 min-h-screen">
             <h1 className="text-blue-900 mb-3 font-bold text-xl">Edit Product</h1>
 
-            <label htmlFor="">
+            <label htmlFor="" className="text-black font-bold">
                 Product Name
-                <input type="text" name="Name" value={title} onChange={(e:any) => setTitle(e.target.value)}/>
+                <input type="text" name="Name" value={title} onChange={(e:any) => setTitle(e.target.value)} className="font-normal"/>
             </label>
 
-            <label htmlFor="">
+            <label htmlFor="" className="text-black font-bold">
                 Description
-                <textarea name="Description" value={description} onChange={(e:any) => setDescription(e.target.value)}></textarea>
+                <textarea name="Description" value={description} onChange={(e:any) => setDescription(e.target.value)} className="font-normal"></textarea>
             </label>
 
-            <label htmlFor="">
-                Price
-                <input type="text" name="Price" value={price} onChange={(e:any) => setPrice(e.target.value)}/>
+            <label htmlFor="" className="font-bold text-black">
+                Price (USD)
+                <input type="text" name="Price" value={price} onChange={(e:any) => setPrice(e.target.value)} className="font-normal"/>
             </label>
 
-            <label htmlFor="">
+            <label htmlFor="" className="font-bold text-black">
                 Photos
             </label>
             <div>
