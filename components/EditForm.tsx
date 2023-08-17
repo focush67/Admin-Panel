@@ -38,7 +38,7 @@ export default function EditForm({
     {
         return (
             <div className="flex items-center justify-center h-full">
-        <FaSpinner className="animate-spin text-blue-500 text-4xl" />
+        <FaSpinner className="animate-spin text-blue-500 text-5xl" />
       </div>
         )
     }
@@ -84,7 +84,7 @@ export default function EditForm({
                 Photos
             </label>
             <div>
-                <ImageTester title={title}/>
+                 <ImageTester title={title} page="Edit"/>
             </div>
         </form>
     )

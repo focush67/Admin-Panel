@@ -42,7 +42,7 @@ export default function NewForm()
                 Photos
             </label>
             <div>
-                <ImageTester title={title}/>
+                <ImageTester title={title} page="New"/> 
             </div>
         </form>
     )
