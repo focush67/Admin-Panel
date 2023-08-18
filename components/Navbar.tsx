@@ -5,9 +5,8 @@ import Logo from "@/components/Logo";
 
 export default function Nav({show}:any) {
   const inactiveLink = 'flex gap-1 p-1 rounded-lg';
-  const activeLink = inactiveLink+' bg-highlight text-black font-bold rounded-sm bg-white ';
-//   const notHoverLink = 'flex gap-1 p-1';
-//   const hoverLink = notHoverLink + 'bg-highlight text-blue-800 font-bold rounded-md'
+  const activeLink = inactiveLink+' bg-highlight text-blue-700 font-bold rounded-sm bg-white ';
+
   const inactiveIcon = 'w-6 h-6';
   const activeIcon = inactiveIcon + ' text-primary';
   const router = useRouter();
@@ -17,7 +16,7 @@ export default function Nav({show}:any) {
     await signOut();
   }
   return (
-    <aside className={(show?'left-0':'-left-full')+" top-0 text-black p-4 fixed w-full bg-blue-900 min-h-screen md:static md:w-auto transition-all"} >
+    <aside className={(show?'left-0':'-left-full')+" top-0 text-white p-4 fixed w-full bg-blue-900 min-h-screen md:static md:w-auto transition-all"} >
       <div className="mb-4 mr-4">
         <Logo />
       </div>
@@ -42,7 +41,7 @@ export default function Nav({show}:any) {
         </Link>
         <Link href={'/orders'} className={pathname.includes('/orders') ? activeLink : inactiveLink}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={pathname.includes('/orders') ? activeIcon : inactiveIcon}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/>
           </svg>
           Orders
         </Link>

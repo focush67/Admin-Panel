@@ -6,6 +6,8 @@ export  function DeleteButton(props:any)
 
         if(shouldDelete)
         {
+          if(props.origin === "products")
+          {
             try{
                 const response = await axios.delete(`/api/products/?id=${props.prodId}`);
 
@@ -13,9 +15,26 @@ export  function DeleteButton(props:any)
             }
             catch(error:any)
             {
-                alert(props.prodId);
-                console.log(error.message);
+                console.error(error.message);
             }
+          }
+
+          if(props.origin === "categories")
+          {
+            try{
+
+              const response = await axios.delete(`/api/categories/?id=${props.prodId}`);
+
+              console.log(response.status);
+
+            }
+            catch(error:any)
+            {
+              console.log(error.message);
+            }
+            
+          }
+            
         }
     }
 

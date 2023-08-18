@@ -2,14 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-input,textarea{
+input,textarea,select{
     @apply border border-gray-200 rounded-md px-1 w-full m-2;
     
 }
 
-
-input:focus{
-    @apply border-blue-900
+input:focus , textarea:focus select:focus{
+    @apply border-blue-700
 }
 
 label{
@@ -26,7 +25,7 @@ label{
 }
 
 table.basic{
-    @apply w-full p-3 m-3 min-h-screen;
+    @apply w-full p-3 m-3 max-h-screen;
 }
 
 table.basic tr td{
