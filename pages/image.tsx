@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
 import { storage } from "@/firebaseConfig";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 } from "uuid";
-import { FaSpinner } from "react-icons/fa";
+
 export default function imageTester({title,page}:{title:string;
 page:string;}) {
   const [imageUpload, setImageUpload] = useState<File>();
@@ -37,6 +37,21 @@ page:string;}) {
     });
   };
 
+  const deleteImage = (url:string) => {
+    const confirmDeletion = window.confirm("Sure wanna delete image ?");
+
+    if(!confirmDeletion) return;
+    
+    const imageRef = ref(storage,url);
+
+    deleteObject(imageRef).then(() => {
+      alert("Image Deleted");
+      setIsUploaded((prev) => !prev);
+    }).catch((err:any) => {
+      console.error(err.message);
+    })
+  }
+
   
 
   return (
@@ -50,15 +65,24 @@ page:string;}) {
         Upload
       </button>
 
-      <div className="gap-2 rounded-lg justify-center mt-3 flex flex-col text-center font-semibold">
-       
-        <div className="flex gap-2">
-        {imageList.map((url) => {
-          // eslint-disable-next-line react/jsx-key
-          return <img src={url} alt="image" className="rounded-lg w-32 h-auto"/>;
-        })}
+      
+        <div className="flex justify-center items-center mt-4">
+  <div className="flex flex-wrap gap-2">
+    {imageList.map((url) => (
+      <div key={url} className="flex-col p-1" style={{ width: "150px", height: "220px" }}>
+        <div className="flex justify-center items-center h-full">
+          <img src={url} alt="image" className="max-w-full max-h-full rounded-lg" />
+        </div>
+        <div className="flex justify-center">
+          <button className="hover:bg-red-800 hover:text-white" onClick={() => deleteImage(url)}>
+            Delete
+          </button>
         </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
+
+      </div>
   );
 }

@@ -28,7 +28,7 @@ export default function NewForm()
 
             <label htmlFor="" className="font-bold text-black">
                 Description
-                <textarea name="Description" id="" value={description} onChange={(e:any) => setDescription(e.target.value)} className="font-normal"></textarea>
+                <textarea name="Description" id="" value={description} onChange={(e:any) => setDescription(e.target.value)} className="font-normal" placeholder="About"></textarea>
             </label>
 
             <label htmlFor="" className="text-black font-bold">
