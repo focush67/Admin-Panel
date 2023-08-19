@@ -9,7 +9,10 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { v4 } from "uuid";
+import Swal from 'sweetalert2';
+import withReactContent from "sweetalert2-react-content";
 import { FaSpinner } from "react-icons/fa";
+const MySwal = withReactContent(Swal);
 export default function imageTester({
   title,
   page,
@@ -49,22 +52,34 @@ export default function imageTester({
   };
 
   const deleteImage = (url: string) => {
-    const confirmDeletion = window.confirm("Sure wanna delete image ?");
+  MySwal.fire({
+    icon: "question",
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const imageRef = ref(storage, url);
+      setIsDeleting(true);
+      deleteObject(imageRef)
+        .then(() => {
+          MySwal.fire("Deleted!", "The image has been deleted.", "success");
+          setIsDeleting(false);
+        })
+        .catch((err: any) => {
+          console.error(err.message);
+          MySwal.fire("Error", "An error occurred while deleting.", "error");
+          setIsDeleting(false);
+        });
+    }
+  });
+};
 
-    if (!confirmDeletion) return;
 
-    const imageRef = ref(storage, url);
-    setIsDeleting(true);
-    deleteObject(imageRef)
-      .then(() => {
-        alert("Image Deleted");
-        setIsDeleting(false);
-      })
-      .catch((err: any) => {
-        console.error(err.message);
-        setIsDeleting(false);
-      });
-  };
+
 
   return (
     <div>
