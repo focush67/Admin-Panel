@@ -35,15 +35,17 @@ const categories = () => {
     try {
       event.preventDefault();
       const data = { name, parent };
-      // if(editing)
-      // {
-      //   await axios.put("/api/categories",{...data , _id:editing._id}).then((response:any) => {
-      //       console.log(response);
-      //   });
-      // }
+      if(editing)
+      {
+        await axios.put("/api/categories",{...data , _id:editing._id}).then((response:any) => {
+            console.log(response);
+        });
+
+        setEditing(null);
+      }
       
-      // else
-      // {
+      else
+      {
       await axios
         .post("/api/categories", data)
         .then((response: any) => {
@@ -52,7 +54,7 @@ const categories = () => {
         .catch((err: any) => {
           console.log(err.message);
         });
-      //}
+      }
       
     } catch (error: any) {
       console.log("Some error occured");
@@ -63,16 +65,16 @@ const categories = () => {
     }
   };
 
-  // const editCategory = async (category: Object) => {
-  //   setEditing(category);
-  //   setName(category.name);
-  //   setParent(category.parent?._id);
-  // };
+  const editCategory = async (category: Object) => {
+    setEditing(category);
+    setName(category.name);
+    setParent(category.parent?._id);
+  };
 
   return (
     <Layout>
       <label className="font-bold ml-3">
-        {Object.keys(editing).length > 1
+        { editing !== null
           ? `Edit ${editing.name} Category`
           : "Add New Category"}
       </label>
@@ -95,8 +97,10 @@ const categories = () => {
             </option>
           ))}
         </select>
-        <button className="bg-transparent hover:bg-blue-500 text-blue-900 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-          Save
+        <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center">
+          <div>
+            Save
+          </div>
         </button>
       </form>
 
@@ -114,7 +118,7 @@ const categories = () => {
               <td>{category.name}</td>
               <td>{category.parent?.name}</td>
               <td>
-                <Link href={""}>
+                <Link href={""} onClick={() => editCategory(category)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
