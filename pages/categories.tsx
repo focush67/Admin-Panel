@@ -35,27 +35,24 @@ const categories = () => {
     try {
       event.preventDefault();
       const data = { name, parent };
-      if(editing)
-      {
-        await axios.put("/api/categories",{...data , _id:editing._id}).then((response:any) => {
+      if (editing) {
+        await axios
+          .put("/api/categories", { ...data, _id: editing._id })
+          .then((response: any) => {
             console.log(response);
-        });
+          });
 
         setEditing(null);
+      } else {
+        await axios
+          .post("/api/categories", data)
+          .then((response: any) => {
+            console.log(response);
+          })
+          .catch((err: any) => {
+            console.log(err.message);
+          });
       }
-      
-      else
-      {
-      await axios
-        .post("/api/categories", data)
-        .then((response: any) => {
-          console.log(response);
-        })
-        .catch((err: any) => {
-          console.log(err.message);
-        });
-      }
-      
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
@@ -66,17 +63,19 @@ const categories = () => {
   };
 
   const editCategory = async (category: Object) => {
+    console.log("editing");
     setEditing(category);
     setName(category.name);
     setParent(category.parent?._id);
   };
 
+  const parentCategories = categories.filter((category) => !category.parent);
   return (
     <Layout>
       <label className="font-bold ml-3">
-        {editing !== null ? 
-           `Edit ${editing.name} Category` :
-           "Add New Category"}
+        {editing !== null
+          ? `Edit ${editing.name} Category`
+          : "Add New Category"}
       </label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
@@ -91,20 +90,22 @@ const categories = () => {
           onChange={(e: any) => setParent(e.target.value)}
         >
           <option value="">No parent category</option>
-          {categories.map((category: String) => (
-            <option key={category._id} value={category._id} className="hover:bg-blue-800">
+          {parentCategories.map((category: String) => (
+            <option
+              key={category._id}
+              value={category._id}
+              className="hover:bg-blue-800"
+            >
               {category.name}
             </option>
           ))}
         </select>
         <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center">
-          <div>
-            Save
-          </div>
+          <div>Save</div>
         </button>
       </form>
 
-      <table className="basic mt-2">
+      {/* <table className="basic mt-2">
         <thead>
           <tr>
             <td className="font-bold">Category Name</td>
@@ -140,7 +141,41 @@ const categories = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {parentCategories.map((parentCategory) => (
+          <div key={parentCategory._id} className="border rounded p-4 bg-gray-200">
+            <h2 className="font-semibold">{parentCategory.name}</h2>
+            <ul className="mt-2">
+              {categories
+                .filter(
+                  (category) => category.parent?._id === parentCategory._id
+                )
+                .map((subCategory) => (
+                  <li
+                    key={subCategory._id}
+                    className="flex justify-between items-center"
+                  >
+                    {subCategory.name}
+                    <div>
+                      <button
+                        onClick={() => editCategory(subCategory)}
+                        className="mr-2 hover:bg-blue-800 hover:text-white"
+                      >
+                        Edit
+                      </button>
+                      <DeleteButton
+                        prodId={subCategory._id}
+                        origin="categories"
+                      />
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 };
