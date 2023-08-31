@@ -67,7 +67,7 @@ const Products = () => {
                   </svg>
                   Edit
                 </Link>
-                <DeleteButton prodId = {product._id} origin = "products"/>
+                <DeleteButton prodId = {product._id}/>
               </td>
             </tr>
           ))}

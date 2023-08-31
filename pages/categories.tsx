@@ -3,20 +3,20 @@
 import Layout from "@/components/Layout";
 import { DeleteButton } from "./products/delete/delButton";
 import mongoose from "mongoose";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const categories = () => {
+const Categories = ({initialName,initialParent}:any) => {
+  
   const [editing, setEditing] = useState(null);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(initialName || "");
   const [categories, setCategories] = useState([]);
-  const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(null);
+  const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(initialParent || null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        axios.get("/api/categories").then((response: any) => {
+        await axios.get("/api/categories").then((response: any) => {
           setCategories(response.data);
         });
       } catch (error: any) {
@@ -29,7 +29,7 @@ const categories = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [categories]);
+  }, []);
 
   const saveCategory = async (event: any) => {
     try {
@@ -70,6 +70,7 @@ const categories = () => {
   };
 
   const parentCategories = categories.filter((category) => !category.parent);
+  
   return (
     <Layout>
       <label className="font-bold ml-3">
@@ -105,48 +106,16 @@ const categories = () => {
         </button>
       </form>
 
-      {/* <table className="basic mt-2">
-        <thead>
-          <tr>
-            <td className="font-bold">Category Name</td>
-            <td className="font-semibold">Parent Category</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((category: object) => (
-            <tr key={category._id}>
-              <td>{category.name}</td>
-              <td>{category.parent?.name}</td>
-              <td>
-                <Link href={""} onClick={() => editCategory(category)}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-4 h-4 mb-0"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      stroke-linejoin="round"
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                    />
-                  </svg>
-                  Edit
-                </Link>
-                <DeleteButton prodId={category._id} origin="categories" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
+      {}
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         {parentCategories.map((parentCategory) => (
           <div key={parentCategory._id} className="border rounded p-4 bg-gray-200">
-            <h2 className="font-semibold">{parentCategory.name}</h2>
+            <div className="flex gap-4">
+              <h2 className="font-semibold">{parentCategory.name}</h2>
+              <DeleteButton prodId={parentCategory._id}/>
+            </div>
+            
             <ul className="mt-2">
               {categories
                 .filter(
@@ -167,7 +136,6 @@ const categories = () => {
                       </button>
                       <DeleteButton
                         prodId={subCategory._id}
-                        origin="categories"
                       />
                     </div>
                   </li>
@@ -180,4 +148,4 @@ const categories = () => {
   );
 };
 
-export default categories;
+export default Categories;

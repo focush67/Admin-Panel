@@ -12,7 +12,9 @@ export default async function handle(request:any,response:any)
 
     if(method === "PUT")
     {
+        console.log("INSIDE CATEGORY PUT");
         const {name,parent,_id} = request.body;
+        console.log(name+" "+parent+" "+_id);
         await Category.findByIdAndUpdate(_id , {
             name,
             parent,
@@ -26,7 +28,17 @@ export default async function handle(request:any,response:any)
 
     if(method === "POST")
     {
+        console.log("INSIDE CATEGORY POST");
         let {name,parent} = request.body;
+        const isPresent = await Category.findOne({name});
+
+        if(isPresent)
+        {
+            return response.json({
+                message:"Product Already Exists",
+                status:400,
+            })
+        }
         
         const categoryDoc = await Category.create({name,parent});
 
@@ -37,10 +49,10 @@ export default async function handle(request:any,response:any)
     {
         try {
             const id = request.query?.id;
+            console.log("DELETING ",id);
+            await Category.findByIdAndDelete(id);
 
-        await Category.findByIdAndDelete(id);
-
-        return response.json({
+            return response.json({
             message : `Deleted Category ${id}`,
             status : 201,
         })

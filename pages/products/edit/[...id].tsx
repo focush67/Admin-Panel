@@ -3,6 +3,7 @@ import axios from "axios";
 import Layout from "@/components/Layout";
 import EditForm from "@/components/EditForm";
 import { useSearchParams } from "next/navigation";
+import mongoose from "mongoose";
 export default function EditProductPage() {
   const searchParams = useSearchParams();
   const prodId = searchParams;
@@ -11,6 +12,7 @@ export default function EditProductPage() {
     existingDescription: "",
     existingPrice: "",
     exisitingImagesFolder: "",
+    exisitingCategory:"",
   });
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export default function EditProductPage() {
         existingDescription: response.data.description,
         existingPrice: response.data.price,
         existingImagesFolder: response.data.imagesFolder,
+        exisitingCategory:response.data.category,
       });
     });
   }, [prodId]);
