@@ -6,10 +6,9 @@ import mongoose from "mongoose";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Categories = ({initialName,initialParent}:any) => {
-  
+const categories = () => {
   const [editing, setEditing] = useState(null);
-  const [name, setName] = useState(initialName || "");
+  const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(initialParent || null);
 
@@ -74,9 +73,9 @@ const Categories = ({initialName,initialParent}:any) => {
   return (
     <Layout>
       <label className="font-bold ml-3">
-        {editing !== null
-          ? `Edit ${editing.name} Category`
-          : "Add New Category"}
+        {editing !== null ? 
+           `Edit ${editing.name} Category` :
+           "Add New Category"}
       </label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
