@@ -14,7 +14,7 @@ export default function NewForm()
         const imagesFolder = title;
         e.preventDefault();
         const data = {title,description,price,imagesFolder,category};
-        alert(title+","+description+","+price+","+imagesFolder+","+category);
+        alert("Product Name : "+title+"\n"+"Description : "+description+"\n"+"Price : "+price+"\n"+"Images Folder : "+imagesFolder+"\n"+"Parent ID : "+category+"\n");
         const response = await axios.post("/api/products",data);
         console.log(response);
 
@@ -23,6 +23,7 @@ export default function NewForm()
             const parent = category;
             const categoryData = {name,parent};
             await axios.post("/api/categories",categoryData).then((response:any) => console.log(response)).catch((error:any) => console.log(error.message))
+
         } catch (error:any) {
             console.log("Some error occured");
             console.log(error.message);
@@ -84,7 +85,7 @@ export default function NewForm()
             </label>
             <div>
                 <ImageTester title={title} page="New"/> 
-            </div>            */}
+            </div>*/}
 
             <button className="btn-primary">Save</button>
         </form>

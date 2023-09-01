@@ -12,7 +12,7 @@ export default function EditProductPage() {
     existingDescription: "",
     existingPrice: "",
     exisitingImagesFolder: "",
-    exisitingCategory:"",
+    exisitingCategory:null,
   });
 
   useEffect(() => {

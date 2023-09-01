@@ -10,7 +10,7 @@ const categories = () => {
   const [editing, setEditing] = useState(null);
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
-  const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(initialParent || null);
+  const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,11 +24,11 @@ const categories = () => {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 5000);
+    const interval = setInterval(fetchData, 3000);
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [categories]);
 
   const saveCategory = async (event: any) => {
     try {
@@ -69,13 +69,13 @@ const categories = () => {
   };
 
   const parentCategories = categories.filter((category) => !category.parent);
-  
+
   return (
     <Layout>
       <label className="font-bold ml-3">
-        {editing !== null ? 
-           `Edit ${editing.name} Category` :
-           "Add New Category"}
+        {editing !== null
+          ? `Edit ${editing.name} Category`
+          : "Add New Category"}
       </label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
@@ -109,13 +109,16 @@ const categories = () => {
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         {parentCategories.map((parentCategory) => (
-          <div key={parentCategory._id} className="border rounded p-4 bg-gray-200">
+          <div
+            key={parentCategory._id}
+            className="border rounded p-4 bg-gray-200"
+          >
             <div className="flex gap-4">
               <h2 className="font-semibold">{parentCategory.name}</h2>
-              <DeleteButton prodId={parentCategory._id}/>
+              <DeleteButton prodId={parentCategory._id} origin="categories" />
             </div>
-            
-            <ul className="mt-2">
+
+            <ul className="mt-3">
               {categories
                 .filter(
                   (category) => category.parent?._id === parentCategory._id
@@ -123,10 +126,10 @@ const categories = () => {
                 .map((subCategory) => (
                   <li
                     key={subCategory._id}
-                    className="flex justify-between items-center"
+                    className="flex justify-between items-center pt-2"
                   >
                     {subCategory.name}
-                    <div>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => editCategory(subCategory)}
                         className="mr-2 hover:bg-blue-800 hover:text-white"
@@ -135,6 +138,7 @@ const categories = () => {
                       </button>
                       <DeleteButton
                         prodId={subCategory._id}
+                        origin="categories"
                       />
                     </div>
                   </li>
@@ -147,4 +151,4 @@ const categories = () => {
   );
 };
 
-export default Categories;
+export default categories;

@@ -1,11 +1,11 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import withReactContent from "sweetalert2-react-content"; // Import SweetAlert2's React content support
 
 const MySwal = withReactContent(Swal);
 
 export function DeleteButton(props: any) {
-
   const handleDelete = async () => {
     const shouldDelete = await MySwal.fire({
       icon: "question",
@@ -20,10 +20,12 @@ export function DeleteButton(props: any) {
 
     if (shouldDelete.isConfirmed) {
       try {
-        
-          axios.delete(`/api/products/?id=${props.prodId}`);
-        
-          axios.delete(`/api/categories/?id=${props.prodId}`);
+        console.log("Origin : ", props.origin);
+        console.log("ID : ", props.prodId);
+
+        await axios.delete(`/api/products/?id=${props.prodId}`);
+
+        axios.delete(`/api/categories/?id=${props.prodId}`);
 
         MySwal.fire("Deleted!", "The item has been deleted.", "success");
       } catch (error: any) {

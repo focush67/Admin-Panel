@@ -3,11 +3,11 @@ import { Category } from '@/models/CategorySchema';
 export default async function handle(request:any,response:any)
 {
     const {method} = request;
-    await connect();
+    connect();
 
     if(method === "GET")
     {
-        return response.json(await Category.find().populate('parent'));
+        response.json(await Category.find().populate('parent'));
     }
 
     if(method === "PUT")
@@ -35,7 +35,7 @@ export default async function handle(request:any,response:any)
         if(isPresent)
         {
             return response.json({
-                message:"Product Already Exists",
+                message:"Product Already Exists,Updated Category",
                 status:400,
             })
         }
@@ -49,7 +49,17 @@ export default async function handle(request:any,response:any)
     {
         try {
             const id = request.query?.id;
-            console.log("DELETING ",id);
+            const exists = Category.findOne({id});
+
+            if(!exists)
+            {
+                return response.json({
+                    message:"Product not found in categories",
+                    status:404,
+                })
+            }
+
+            console.log("DELETING FROM CATEGORY ",id);
             await Category.findByIdAndDelete(id);
 
             return response.json({

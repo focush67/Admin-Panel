@@ -22,7 +22,7 @@ export default async function handle(request: any, response: any) {
   
         const {title,description,price,imagesFolder,category} = request.body;
 
-        console.log(title+" "+description+" "+price+" "+category);  
+        console.log(title+" "+description+" "+price+" "+category._id);  
          
          const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category});
         console.log(res);
@@ -79,7 +79,7 @@ export default async function handle(request: any, response: any) {
 // DELETE REQUEST
   if (method === "DELETE") {
     try {
-      console.log("INSIDE DELETE");
+      console.log("INSIDE PRODUCT DELETE");
       const id2 = request.query?.id;
       console.log(id2);
       await Product.findByIdAndDelete(id2);

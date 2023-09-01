@@ -6,7 +6,7 @@ const productSchema = new Schema({
     description : String,
     price : {type:String,required:true},
     imagesFolder : {type:String,default:"images"},
-    category : {type:mongoose.Types.ObjectId , ref:"Category"},
+    category : {type:mongoose.Types.ObjectId , ref: 'Category', default:undefined},
     
 })
 
