@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaSpinner } from "react-icons/fa";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import ImageTester from "@/pages/image";
 import mongoose from "mongoose";
@@ -10,14 +11,20 @@ export default function EditForm({
   existingPrice,
   existingImagesFolder,
   existingCategory,
+  existingProperties,
 }: {
   existingTitle: string;
   existingDescription: string;
   existingPrice: string;
   existingImagesFolder: string;
   existingCategory: mongoose.Types.ObjectId;
+  existingProperties : [{
+    name:String,
+    value:String,
+  }]
 }) {
   const productId = useSearchParams();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(existingTitle || "T");
   const [description, setDescription] = useState(existingDescription || "D");
@@ -25,11 +32,15 @@ export default function EditForm({
   const [imagesFolder, setImagesFolder] = useState(existingImagesFolder);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState<mongoose.Types.ObjectId | null>(existingCategory || null);
+  const [properties,setProperties] = useState(existingProperties || [{
+    name:"",
+    value:"",
+  }]);
 
   const handleSubmitEdit = async (e: any) => {
     setImagesFolder(title);
     e.preventDefault();
-    const data = { title, description, price, imagesFolder, category };
+    const data = { title, description, price, imagesFolder, category,properties };
     
     await axios.put(`/api/products/?${productId}`,data).then((response:any) => console.log(response.data)).catch((error:any) => console.log(error.message));
 
@@ -38,13 +49,15 @@ export default function EditForm({
       const parent = category;
       const _id = productId.get("id");
 
-      const categoryData = { name, parent, _id };
+      const categoryData = { name, parent, _id ,properties};
       alert("Product Name : "+categoryData.name+"\n"+"Parent ID : "+parent+"\n"+"Product ID : "+_id);
 
       await axios
         .put("/api/categories", categoryData)
         .then((response: any) => console.log(response))
         .catch((err: any) => console.log(err.message));
+
+        router.push("/products");
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
@@ -78,8 +91,20 @@ export default function EditForm({
       setImagesFolder(data.imagesFolder);
       setLoading(false);
       setCategory(data.category);
+      setProperties(data.properties);
     });
   }, [productId]);
+
+  const handlePropertyChange = (e:any , index : any , field : any) => {
+    const newProperties = [...properties];
+    newProperties[index][field] = e.target.value;
+    setProperties(newProperties);
+  }
+
+  const handleAddProperty = () => {
+    setProperties([...properties , {name:"",value:""}]);
+    console.log(properties);
+  }
 
   if (loading) {
     return (
@@ -134,6 +159,31 @@ export default function EditForm({
       </label>
 
       <label htmlFor="" className="font-bold text-black">
+        {
+          properties.map((property,index) => (
+            <div key={index} className="flex gap-1">
+              <input type="text"
+              value={property.name}
+              onChange={(e)=>handlePropertyChange(e,index,"name")}
+               />
+
+               <input type="text" 
+               value={property.value}
+               onChange={(e)=>handlePropertyChange(e,index,"value")}/>
+
+               {
+                index === properties.length-1 && (
+                  <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center" onClick={handleAddProperty}>
+                    <div>Add Property</div>
+                  </button>
+                )
+               }
+            </div>
+          ))
+        }
+      </label>
+
+      <label htmlFor="" className="font-bold text-black">
         Price (USD)
         <input
           type="text"
@@ -151,7 +201,8 @@ export default function EditForm({
                  <ImageTester title={title} page="Edit"/>
             </div> */}
 
-      <button className="btn-primary">Save</button>
+            <button className="btn-primary">Save</button>
+      
     </form>
   );
 }

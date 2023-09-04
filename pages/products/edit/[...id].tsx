@@ -13,6 +13,7 @@ export default function EditProductPage() {
     existingPrice: "",
     exisitingImagesFolder: "",
     exisitingCategory:null,
+    exisitingProperties:[{}],
   });
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function EditProductPage() {
         existingPrice: response.data.price,
         existingImagesFolder: response.data.imagesFolder,
         exisitingCategory:response.data.category,
+        exisitingProperties:response.data.properties,
       });
     });
   }, [prodId]);

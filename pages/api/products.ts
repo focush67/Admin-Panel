@@ -20,11 +20,11 @@ export default async function handle(request: any, response: any) {
         const prodId = request.query.id;
         console.log("INSIDE PRODUCT PUT");
   
-        const {title,description,price,imagesFolder,category} = request.body;
+        const {title,description,price,imagesFolder,category,properties} = request.body;
 
         console.log(title+" "+description+" "+price+" "+category._id);  
          
-         const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category});
+         const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category,properties});
         console.log(res);
         return response.json({
           message: "Put request success",
@@ -40,7 +40,7 @@ export default async function handle(request: any, response: any) {
 //POST REQUEST
   if (method === "POST") {
     try {
-      const {title, description, price , imagesFolder,category} = request.body;
+      const {title, description, price , imagesFolder,category,properties} = request.body;
       console.log("INSIDE PRODUCT POST : "+title,description,price,imagesFolder,category);
 
       const isThereAlready = await Product.findOne({title});
@@ -59,7 +59,7 @@ export default async function handle(request: any, response: any) {
         price,
         imagesFolder,
         category,
-
+        properties,
       });
 
       return response.json({

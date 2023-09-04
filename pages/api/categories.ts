@@ -13,11 +13,12 @@ export default async function handle(request:any,response:any)
     if(method === "PUT")
     {
         console.log("INSIDE CATEGORY PUT");
-        const {name,parent,_id} = request.body;
+        const {name,parent,_id,properties} = request.body;
         console.log(name+" "+parent+" "+_id);
         await Category.findByIdAndUpdate(_id , {
             name,
             parent,
+            properties,
         })
 
         return response.json({
@@ -29,7 +30,7 @@ export default async function handle(request:any,response:any)
     if(method === "POST")
     {
         console.log("INSIDE CATEGORY POST");
-        let {name,parent} = request.body;
+        let {name,parent,properties} = request.body;
         const isPresent = await Category.findOne({name});
 
         if(isPresent)
@@ -40,7 +41,7 @@ export default async function handle(request:any,response:any)
             })
         }
         
-        const categoryDoc = await Category.create({name,parent});
+        const categoryDoc = await Category.create({name,parent,properties});
 
        return response.json(categoryDoc);
     }
