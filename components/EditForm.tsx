@@ -18,10 +18,12 @@ export default function EditForm({
   existingPrice: string;
   existingImagesFolder: string;
   existingCategory: mongoose.Types.ObjectId;
-  existingProperties : [{
-    name:String,
-    value:String,
-  }]
+  existingProperties: [
+    {
+      name: String;
+      value: String;
+    }
+  ];
 }) {
   const productId = useSearchParams();
   const router = useRouter();
@@ -31,33 +33,55 @@ export default function EditForm({
   const [price, setPrice] = useState(existingPrice || "0");
   const [imagesFolder, setImagesFolder] = useState(existingImagesFolder);
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState<mongoose.Types.ObjectId | null>(existingCategory || null);
-  const [properties,setProperties] = useState(existingProperties || [{
-    name:"",
-    value:"",
-  }]);
+  const [category, setCategory] = useState<mongoose.Types.ObjectId | null>(
+    existingCategory || null
+  );
+  const [properties, setProperties] = useState(
+    existingProperties || [
+      {
+        name: "",
+        value: "",
+      },
+    ]
+  );
 
   const handleSubmitEdit = async (e: any) => {
     setImagesFolder(title);
     e.preventDefault();
-    const data = { title, description, price, imagesFolder, category,properties };
-    
-    await axios.put(`/api/products/?${productId}`,data).then((response:any) => console.log(response.data)).catch((error:any) => console.log(error.message));
+    const data = {
+      title,
+      description,
+      price,
+      imagesFolder,
+      category,
+      properties,
+    };
+
+    await axios
+      .put(`/api/products/?${productId}`, data)
+      .then((response: any) => console.log(response.data))
+      .catch((error: any) => console.log(error.message));
 
     try {
       const name = title;
       const parent = category;
-      const _id = productId.get("id");
 
-      const categoryData = { name, parent, _id ,properties};
-      alert("Product Name : "+categoryData.name+"\n"+"Parent ID : "+parent+"\n"+"Product ID : "+_id);
+      const categoryData = { name, parent, properties };
+      alert(
+        "Product Name : " +
+          categoryData.name +
+          "\n" +
+          "Parent ID : " +
+          parent +
+          "\n"
+      );
 
       await axios
-        .put("/api/categories", categoryData)
+        .put(`/api/categories/?${productId}`, categoryData)
         .then((response: any) => console.log(response))
         .catch((err: any) => console.log(err.message));
 
-        router.push("/products");
+      router.push("/products");
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
@@ -79,10 +103,9 @@ export default function EditForm({
   }, []);
 
   const parentCategories = categories.filter((cat: any) => !cat.parent);
-  
 
   useEffect(() => {
-    axios.get(`/api/products?${productId}`).then((response:any) => {
+    axios.get(`/api/products/?${productId}`).then((response: any) => {
       const data = response.data;
       console.log(data);
       setTitle(data.title);
@@ -95,16 +118,16 @@ export default function EditForm({
     });
   }, [productId]);
 
-  const handlePropertyChange = (e:any , index : any , field : any) => {
+  const handlePropertyChange = (e: any, index: any, field: any) => {
     const newProperties = [...properties];
     newProperties[index][field] = e.target.value;
     setProperties(newProperties);
-  }
+  };
 
   const handleAddProperty = () => {
-    setProperties([...properties , {name:"",value:""}]);
+    setProperties([...properties, { name: "", value: "" }]);
     console.log(properties);
-  }
+  };
 
   if (loading) {
     return (
@@ -117,7 +140,7 @@ export default function EditForm({
   return (
     <form
       onSubmit={handleSubmitEdit}
-      className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
+      className="bg-gray-200 overflow-hidden relative p-1"
     >
       <h1 className="text-blue-900 mb-3 font-bold text-xl">Edit Product</h1>
 
@@ -140,8 +163,7 @@ export default function EditForm({
         >
           <option value="">None</option>
           {parentCategories.map((category: String) => (
-            <option value={category._id} key={category._id}
-            >
+            <option value={category._id} key={category._id}>
               {category.name}
             </option>
           ))}
@@ -159,28 +181,30 @@ export default function EditForm({
       </label>
 
       <label htmlFor="" className="font-bold text-black">
-        {
-          properties.map((property,index) => (
-            <div key={index} className="flex gap-1">
-              <input type="text"
+        {properties.map((property, index) => (
+          <div key={index} className="flex gap-1">
+            <input
+              type="text"
               value={property.name}
-              onChange={(e)=>handlePropertyChange(e,index,"name")}
-               />
+              onChange={(e) => handlePropertyChange(e, index, "name")}
+            />
 
-               <input type="text" 
-               value={property.value}
-               onChange={(e)=>handlePropertyChange(e,index,"value")}/>
+            <input
+              type="text"
+              value={property.value}
+              onChange={(e) => handlePropertyChange(e, index, "value")}
+            />
 
-               {
-                index === properties.length-1 && (
-                  <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center" onClick={handleAddProperty}>
-                    <div>Add Property</div>
-                  </button>
-                )
-               }
-            </div>
-          ))
-        }
+            {index === properties.length - 1 && (
+              <button
+                className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center"
+                onClick={handleAddProperty}
+              >
+                <div>Add Property</div>
+              </button>
+            )}
+          </div>
+        ))}
       </label>
 
       <label htmlFor="" className="font-bold text-black">
@@ -194,15 +218,12 @@ export default function EditForm({
         />
       </label>
 
-      {/* <label htmlFor="" className="font-bold text-black">
-                Photos
-            </label>
-            <div>
-                 <ImageTester title={title} page="Edit"/>
-            </div> */}
-
-            <button className="btn-primary">Save</button>
-      
+      <label htmlFor="" className="font-bold text-black">
+        Photos
+      </label>
+      <div>
+        <ImageTester title={title} page="Edit" />
+      </div>
     </form>
   );
 }

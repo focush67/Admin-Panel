@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import withReactContent from "sweetalert2-react-content"; // Import SweetAlert2's React content support
 
@@ -24,8 +23,6 @@ export function DeleteButton(props: any) {
         console.log("ID : ", props.prodId);
 
         await axios.delete(`/api/products/?id=${props.prodId}`);
-
-        axios.delete(`/api/categories/?id=${props.prodId}`);
 
         MySwal.fire("Deleted!", "The item has been deleted.", "success");
       } catch (error: any) {

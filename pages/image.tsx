@@ -56,31 +56,35 @@ export default function imageTester({
   };
 
   const deleteImage = (url: string) => {
-    MySwal.fire({
-      icon: "question",
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const imageRef = ref(storage, url);
-        setIsDeleting(true);
-        deleteObject(imageRef)
-          .then(() => {
-            MySwal.fire("Deleted!", "The image has been deleted.", "success");
-            setIsDeleting(false);
-          })
-          .catch((err: any) => {
-            console.error(err.message);
-            MySwal.fire("Error", "An error occurred while deleting.", "error");
-            setIsDeleting(false);
-          });
-      }
-    });
-  };
+  MySwal.fire({
+    icon: "question",
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      
+      const fullPath = url.replace("https://storage.googleapis.com/", "");
+
+      const imageRef = ref(storage, fullPath);
+      setIsDeleting(true);
+      deleteObject(imageRef)
+        .then(() => {
+          MySwal.fire("Deleted!", "The image has been deleted.", "success");
+          setIsDeleting(false);
+        })
+        .catch((err: any) => {
+          console.error(err.message);
+          MySwal.fire("Error", "An error occurred while deleting.", "error");
+          setIsDeleting(false);
+        });
+    }
+  });
+};
+
 
   return (
     <div>
@@ -106,6 +110,7 @@ export default function imageTester({
             <p>No images available.</p>
           )
         ) : (
+          
           imageList.map((url) => (
             <div
               key={url}
@@ -120,12 +125,14 @@ export default function imageTester({
                   className="hover:bg-red-800 hover:text-white"
                   onClick={() => deleteImage(url)}
                   disabled={isDeleting}
-                >
-                  {isDeleting ? (
-                    <FaSpinner className="animate-spin" />
-                  ) : (
-                    "Delete"
-                  )}
+                > 
+                  {
+                    isDeleting ? (
+                      <FaSpinner className="animate-spin"/>
+                    ) : (
+                      "Delete"
+                    )
+                  }
                 </button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
+import { Category } from "@/models/CategorySchema";
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
@@ -25,6 +26,13 @@ export default async function handle(request: any, response: any) {
         console.log(title+" "+description+" "+price+" "+category._id);  
          
          const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category,properties});
+
+        await Category.findByIdAndUpdate(prodId , {
+          name : title,
+          parent : category,
+          properties,
+        });
+        
         console.log(res);
         return response.json({
           message: "Put request success",
@@ -53,7 +61,8 @@ export default async function handle(request: any, response: any) {
           success:false,
         })
       }
-      await Product.create({
+      
+      const createdProduct = await Product.create({
         title,
         description,
         price,
@@ -61,6 +70,15 @@ export default async function handle(request: any, response: any) {
         category,
         properties,
       });
+
+      const productId = createdProduct._id;
+
+      await Category.create({
+        _id : productId,
+        name : title,
+        parent : category,
+        properties
+      })
 
       return response.json({
         message: "Product created successfully",
@@ -83,6 +101,7 @@ export default async function handle(request: any, response: any) {
       const id2 = request.query?.id;
       console.log(id2);
       await Product.findByIdAndDelete(id2);
+      await Category.findByIdAndDelete(id2);
       return response.json({
         message:"Deleted Product",
         status:201,

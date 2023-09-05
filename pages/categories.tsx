@@ -7,6 +7,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const categories = () => {
+  const [properties, setProperties] = useState([
+    {
+      name: "",
+      value: "",
+    },
+  ]);
   const [editing, setEditing] = useState(null);
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
@@ -15,7 +21,7 @@ const categories = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await axios.get("/api/categories").then((response: any) => {
+        await axios.get("/api/categories/").then((response: any) => {
           setCategories(response.data);
         });
       } catch (error: any) {
@@ -28,23 +34,24 @@ const categories = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [categories]);
+  }, []);
 
   const saveCategory = async (event: any) => {
     try {
       event.preventDefault();
-      const data = { name, parent };
+      const data = { name, parent,properties };
       if (editing) {
         await axios
-          .put("/api/categories", { ...data, _id: editing._id })
+          .put("/api/categories", {...data , _id : editing._id})
           .then((response: any) => {
             console.log(response);
           });
-
+        
+        
         setEditing(null);
       } else {
         await axios
-          .post("/api/categories", data)
+          .post("/api/categories/", data)
           .then((response: any) => {
             console.log(response);
           })
@@ -57,15 +64,32 @@ const categories = () => {
       console.log(error.message);
     } finally {
       setName("");
-      setParent(null);
+      setParent("");
+      setProperties([{
+        name:"",
+        value:"",
+      }]);
     }
   };
 
   const editCategory = async (category: Object) => {
-    console.log("editing");
+    console.log("editing : ",category._id);
     setEditing(category);
     setName(category.name);
     setParent(category.parent?._id);
+    setProperties(category.properties);
+  };
+
+  const handlePropertyChange = (e: any, index: any, field: any) => {
+    const newProperties = [...properties];
+    newProperties[index][field] = e.target.value;
+    setProperties(newProperties);
+  };
+
+  const handleAddProperty = () => {
+    setProperties([...properties, { name: "", value: "" }]);
+
+    console.log(properties);
   };
 
   const parentCategories = categories.filter((category) => !category.parent);
@@ -100,12 +124,14 @@ const categories = () => {
             </option>
           ))}
         </select>
+
         <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center">
           <div>Save</div>
         </button>
       </form>
 
-      {}
+      
+      
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         {parentCategories.map((parentCategory) => (
@@ -130,12 +156,7 @@ const categories = () => {
                   >
                     {subCategory.name}
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => editCategory(subCategory)}
-                        className="mr-2 hover:bg-blue-800 hover:text-white"
-                      >
-                        Edit
-                      </button>
+                      
                       <DeleteButton
                         prodId={subCategory._id}
                         origin="categories"

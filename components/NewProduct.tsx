@@ -52,7 +52,6 @@ export default function NewForm() {
         .then((response: any) => console.log(response))
         .catch((error: any) => console.log(error.message));
 
-      router.push("/products");
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
@@ -61,6 +60,8 @@ export default function NewForm() {
             name:"",
             value:"",
         }])
+
+        router.push("/products");
     }
   };
 
@@ -95,7 +96,7 @@ export default function NewForm() {
   return (
     <form
       onSubmit={handleSubmitNew}
-      className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
+      className="bg-gray-200 overflow-hidden relative p-1"
     >
       <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
 
@@ -183,6 +184,7 @@ export default function NewForm() {
       <div>
         <ImageTester title={title} page="New" />
       </div>
+
     </form>
   );
 }

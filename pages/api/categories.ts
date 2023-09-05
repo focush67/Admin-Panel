@@ -1,74 +1,119 @@
-import connect from '@/lib/mongoose';
-import { Category } from '@/models/CategorySchema';
-export default async function handle(request:any,response:any)
-{
-    const {method} = request;
-    connect();
+import connect from "@/lib/mongoose";
+import { Category } from "@/models/CategorySchema";
+export default async function handle(request: any, response: any) {
+  const { method } = request;
+  connect();
 
-    if(method === "GET")
-    {
-        response.json(await Category.find().populate('parent'));
+  // GET Request
+  if (method === "GET") {
+    if (request.query?.id) {
+      response.json(await Category.findOne({ _id: request.query?.id }));
     }
 
-    if(method === "PUT")
-    {
-        console.log("INSIDE CATEGORY PUT");
-        const {name,parent,_id,properties} = request.body;
-        console.log(name+" "+parent+" "+_id);
-        await Category.findByIdAndUpdate(_id , {
-            name,
-            parent,
-            properties,
-        })
+    response.json(await Category.find().populate("parent"));
+  }
 
+  // PUT Request
+  if (method === "PUT") {
+    try {
+      console.log("INSIDE CATEGORY PUT");
+      const _id = request.query?.id;
+      const { name, parent, properties } = request.body;
+      console.log(name + " " + parent);
+      const exists = Category.findById(_id);
+
+      if(!exists)
+      {
+        console.log("Not found in category");
+        return response.json(
+          {
+            status:300,
+          }
+        )
+      }
+      const updatedCategory = await Category.findByIdAndUpdate(_id, {
+        name,
+        parent,
+        properties,
+      });
+
+      if(!updatedCategory)
+      {
         return response.json({
-            message:"Category Updated",
-            status:201,
+          message:"Category not found",
+          status:404,
         })
+      }
+
+      console.log(updatedCategory);
+
+      return response.json({
+        message:"Updation Successfull",
+        status:201,
+      })
+
+    } catch (error: any) {
+      console.log(error.message);
+      return response.json({
+        message:"Internal Server Error",
+        status:500,
+      })
     }
+  }
 
-    if(method === "POST")
-    {
-        console.log("INSIDE CATEGORY POST");
-        let {name,parent,properties} = request.body;
-        const isPresent = await Category.findOne({name});
+  // POST Request
 
-        if(isPresent)
-        {
-            return response.json({
-                message:"Product Already Exists,Updated Category",
-                status:400,
-            })
-        }
-        
-        const categoryDoc = await Category.create({name,parent,properties});
+  if (method === "POST") {
+    try {
+      console.log("INSIDE CATEGORY POST");
+      const { name, parent, properties } = request.body;
+      const isPresent = await Category.findOne({ name });
 
-       return response.json(categoryDoc);
+      if (isPresent) {
+        return response.json({
+          message: "Product Already Exists",
+          status: 400,
+        });
+      }
+
+      await Category.create({ name, parent, properties });
+
+      return response.json({
+        message: "Product saved in Category",
+        status: 201,
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      return response.json({
+        message: "Some error occured",
+        status: 500,
+      });
     }
+  }
 
-    if(method === "DELETE")
-    {
-        try {
-            const id = request.query?.id;
-            const exists = Category.findOne({id});
+  // DELETE Request
 
-            if(!exists)
-            {
-                return response.json({
-                    message:"Product not found in categories",
-                    status:404,
-                })
-            }
+  if (method === "DELETE") {
+    try {
+      const id = request.query?.id;
+      const exists = Category.findOne({ id });
 
-            console.log("DELETING FROM CATEGORY ",id);
-            await Category.findByIdAndDelete(id);
+      if (!exists) {
+        return response.json({
+          message: "Product not found in categories",
+          status: 404,
+        });
+      }
 
-            return response.json({
-            message : `Deleted Category ${id}`,
-            status : 201,
-        })
-        } catch (error:any) {
-            console.log(error.message);
-        }
+      console.log("DELETING FROM CATEGORY ", id);
+      await Category.findByIdAndDelete(id);
+
+      return response.json({
+        message: `Deleted Category ${id}`,
+        status: 201,
+      });
+    } catch (error: any) {
+      console.log(error.message);
     }
+  }
 }
