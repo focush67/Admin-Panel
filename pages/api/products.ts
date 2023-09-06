@@ -1,9 +1,11 @@
 import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
+import { isAdminRequest } from "./auth/[...nextauth]";
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
+  await isAdminRequest(request,response);
   console.log("DB Connected");
 
 // GET REQUEST
@@ -32,7 +34,7 @@ export default async function handle(request: any, response: any) {
           parent : category,
           properties,
         });
-        
+
         console.log(res);
         return response.json({
           message: "Put request success",

@@ -129,6 +129,22 @@ export default function EditForm({
     console.log(properties);
   };
 
+  const handleRemoveProperty = async (e:any , index:number) => {
+    const newProperties = [...properties];
+    newProperties.splice(index,1);
+    setProperties(newProperties);
+
+    try {
+      const updatedData = {
+        title,description,price,imagesFolder,category,properties:newProperties,
+      };
+
+      await axios.put(`/api/products/?${productId}`,updatedData);
+    } catch (error:any) {
+      console.log(error);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -140,7 +156,7 @@ export default function EditForm({
   return (
     <form
       onSubmit={handleSubmitEdit}
-      className="bg-gray-200 overflow-hidden relative p-1"
+      className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
     >
       <h1 className="text-blue-900 mb-3 font-bold text-xl">Edit Product</h1>
 
@@ -194,7 +210,11 @@ export default function EditForm({
               value={property.value}
               onChange={(e) => handlePropertyChange(e, index, "value")}
             />
-
+            {
+              index > 0 && (
+                  <button className="border-rounded-md px-1 m-2 mb-0 w-[46%] hover:bg-red-900 hover:text-white justify-center" onClick={(e) => handleRemoveProperty(e,index)}>Remove Property</button>
+                )
+            }
             {index === properties.length - 1 && (
               <button
                 className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center"

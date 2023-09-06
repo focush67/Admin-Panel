@@ -24,6 +24,14 @@ label{
     translate-y-1 ease-out 
 }
 
+.btn-secondary{
+    @apply text-black p-2 rounded-md mt-4 border-black transition-all w-full pl-[50%]
+}
+
+.btn-secondary:hover{
+    @apply text-white bg-red-900 translate-y-1 ease-out
+}
+
 table.basic{
     @apply w-full p-3 m-3 max-h-screen;
 }

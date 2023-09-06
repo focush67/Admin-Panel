@@ -1,9 +1,10 @@
 import connect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
+import { isAdminRequest, options } from "./auth/[...nextauth]";
 export default async function handle(request: any, response: any) {
   const { method } = request;
   connect();
-
+  await isAdminRequest(request,response);
   // GET Request
   if (method === "GET") {
     if (request.query?.id) {

@@ -6,12 +6,14 @@ import Logo from "@/components/Logo";
 export default function Layout({children}:any) {
   const [showNav,setShowNav] = useState(false);
   const { data: session } = useSession();
+
   if (!session) {
     return (
       <div className="bg-bgGray w-screen h-screen flex items-center">
         <div className="text-center w-full">
           <button onClick={() => signIn()} className="bg-white p-2 px-4 rounded-lg text-xl font-bold hover:bg-black hover:text-white">Login</button>
         </div>
+
       </div>
     );
   }

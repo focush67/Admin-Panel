@@ -81,7 +81,7 @@ export default function NewForm() {
 
   const parentCategories = categories.filter((cat: any) => !cat.parent);
 
-  const handlePropertyChange = (e: any, index: any, field: any) => {
+  const handlePropertyChange = (e: any, index: number, field: any) => {
     const newProperties = [...properties];
     newProperties[index][field] = e.target.value;
     setProperties(newProperties);
@@ -93,10 +93,16 @@ export default function NewForm() {
     console.log(properties);
   };
 
+  const handleRemoveProperty = (e:any,index:number) => {
+    const temp = [...properties];
+    temp.splice(index,1);
+    setProperties(temp);
+  }
+
   return (
     <form
       onSubmit={handleSubmitNew}
-      className="bg-gray-200 overflow-hidden relative p-1"
+      className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
     >
       <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
 
@@ -154,14 +160,32 @@ export default function NewForm() {
               value={property.value}
               onChange={(e) => handlePropertyChange(e, index, "value")}
             />
+            
+              {
+                index > 0 && (
+                  <button className="border-rounded-md px-1 m-2 mb-0 w-[46%] hover:bg-red-900 hover:text-white justify-center" onClick={(e) => handleRemoveProperty(e,index)}>Remove Property</button>
+                )
+              }
+                
+              
+            
+            
+
             {index === properties.length - 1 && (
-              <button
-                className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center"
+              <div className="flex gap-2 justify-between">
+                <button
+                className="border rounded-md px-1 py-1 m-2 mb-0 w-auto hover:bg-blue-900 hover:text-white justify-center"
                 onClick={handleAddProperty}
               >
                 <div>Add Property</div>
               </button>
+
+              
+              </div>
+              
             )}
+
+            
           </div>
         ))}
       </label>
