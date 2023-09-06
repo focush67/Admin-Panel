@@ -3,16 +3,15 @@
 @tailwind utilities;
 
 input,textarea,select{
-    @apply border border-gray-200 rounded-md px-1 w-full m-2;
-    
+    @apply border border-gray-200 rounded-md px-1 w-full m-2 text-[16px] shadow-lg shadow-gray-300;
 }
 
-input:focus , textarea:focus select:focus{
-    @apply border-blue-700
+label>h1{
+    @apply text-blue-900 px-2 m-auto text-lg;
 }
 
-label{
-    @apply text-blue-900;
+h1{
+    @apply p-0.5
 }
 
 .btn-primary{
@@ -29,19 +28,19 @@ label{
 }
 
 .btn-secondary:hover{
-    @apply text-white bg-red-900 translate-y-1 ease-out
+    @apply text-white bg-red-700 translate-y-1 ease-out
 }
 
 table.basic{
-    @apply w-full p-3 m-3 max-h-screen;
+    @apply w-full p-3 m-3 max-h-screen bg-white shadow-lg shadow-gray-500 rounded-lg;
 }
 
 table.basic tr td{
-    @apply border p-1 border-blue-200;
+    @apply border p-3 shadow-sm shadow-gray-300;
 }
 
 table.basic thead tr td{
-    @apply bg-blue-100 
+    @apply border-b border-gray-200 bg-blue-100 text-sm uppercase text-gray-500 px-4
 }
 
 
@@ -57,7 +56,7 @@ table.basic a:hover{
     @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
 }
 .btn-red:hover{
-     @apply bg-red-900 text-white;
+     @apply bg-red-700 text-white;
 }
 
 button{

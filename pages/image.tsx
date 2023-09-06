@@ -97,7 +97,7 @@ export default function imageTester({
         onClick={uploadImage}
         className=" bg-gray-300 relative text-lg font-bold btn-primary"
       >
-        Upload
+        Save
       </button>
 
       <div className="flex mt-4">

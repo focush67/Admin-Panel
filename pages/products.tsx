@@ -32,7 +32,7 @@ const Products = () => {
     <Layout>
       <Link
         href={"/products/new"}
-        className="bg-blue-900 text-white font-bold py-1 px-2 mx-3 rounded-md"
+        className="bg-blue-900 text-white font-bold py-2 px-2 mx-3 my-2 rounded-md"
       >
         Add New Products
       </Link>

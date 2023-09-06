@@ -154,14 +154,17 @@ export default function EditForm({
   }
 
   return (
-    <form
+    <div>
+      <form
       onSubmit={handleSubmitEdit}
       className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
     >
-      <h1 className="text-blue-900 mb-3 font-bold text-xl">Edit Product</h1>
+      <div className="flex justify-center">
+        <h1 className="text-blue-900 mb-3 font-bold text-xl">Edit Product</h1>
+      </div>
 
       <label htmlFor="" className="text-black font-bold">
-        Product Name
+        <h1>Product Name</h1>
         <input
           type="text"
           name="Name"
@@ -171,8 +174,8 @@ export default function EditForm({
         />
       </label>
 
-      <label className="font-semibold text-black">
-        Category
+      <label className="font-bold text-black">
+        <h1>Category</h1>
         <select
           value={category}
           onChange={(e: any) => setCategory(e.target.value)}
@@ -186,8 +189,8 @@ export default function EditForm({
         </select>
       </label>
 
-      <label htmlFor="" className="text-black font-bold">
-        Description
+      <label htmlFor="" className="text-black font-bold ">
+        <h1>Description</h1>
         <textarea
           name="Description"
           value={description}
@@ -228,7 +231,7 @@ export default function EditForm({
       </label>
 
       <label htmlFor="" className="font-bold text-black">
-        Price (USD)
+        <h1>Price</h1>
         <input
           type="text"
           name="Price"
@@ -239,11 +242,12 @@ export default function EditForm({
       </label>
 
       <label htmlFor="" className="font-bold text-black">
-        Photos
+        <h1>Photos</h1>
       </label>
       <div>
         <ImageTester title={title} page="Edit" />
       </div>
     </form>
+    </div>
   );
 }

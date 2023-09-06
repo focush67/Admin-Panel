@@ -137,7 +137,11 @@ const categories = () => {
         {parentCategories.map((parentCategory) => (
           <div
             key={parentCategory._id}
-            className="border rounded p-4 bg-gray-200"
+            className="border rounded p-4 bg-gray-100"
+            style={{
+              boxShadow:"0px 0px 5px 0px rgba(0,0,0,0.5)",
+              padding:"10px",
+            }}
           >
             <div className="flex gap-4">
               <h2 className="font-semibold">{parentCategory.name}</h2>

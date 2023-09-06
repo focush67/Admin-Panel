@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import Nav from "@/components/Navbar";
 import {useState} from "react";
 import Logo from "@/components/Logo";
@@ -9,7 +9,7 @@ export default function Layout({children}:any) {
 
   if (!session) {
     return (
-      <div className="bg-bgGray w-screen h-screen flex items-center">
+      <div className="bg-gray-200 w-screen h-screen flex items-center">
         <div className="text-center w-full">
           <button onClick={() => signIn()} className="bg-white p-2 px-4 rounded-lg text-xl font-bold hover:bg-black hover:text-white">Login</button>
         </div>
@@ -19,7 +19,7 @@ export default function Layout({children}:any) {
   }
 
   return (
-    <div className="bg-bgGray min-h-screen ">
+    <div className="bg-gray-200 min-h-screen ">
       <div className=" md:hidden flex items-center p-4">
         <button onClick={() => setShowNav(!showNav)}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

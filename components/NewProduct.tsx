@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaSpinner } from "react-icons/fa";
 import mongoose from "mongoose";
 import ImageTester from "@/pages/image";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,7 @@ export default function NewForm() {
       value: "",
     },
   ]);
+  const [loading,setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -70,7 +72,9 @@ export default function NewForm() {
       try {
         axios
           .get("/api/categories")
-          .then((response: any) => setCategories(response.data));
+          .then((response: any) => {
+            setCategories(response.data)
+            setLoading(false)});
       } catch (error: any) {
         console.log(error.message);
       }
@@ -99,15 +103,25 @@ export default function NewForm() {
     setProperties(temp);
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <FaSpinner className="animate-spin text-blue-500 text-5xl" />
+      </div>
+    );
+  }
+  
   return (
     <form
       onSubmit={handleSubmitNew}
       className="bg-gray-200 overflow-hidden relative p-1 min-h-screen"
     >
-      <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
+      <div className="flex justify-center">
+        <h1 className="text-blue-900 mb-3 font-bold text-xl">New Product</h1>
+      </div>
 
-      <label htmlFor="" className="font-bold text-black">
-        Product Name
+      <label htmlFor="" className="font-bold">
+        <h1>Product Name</h1>
         <input
           type="text"
           name="Name"
@@ -118,8 +132,8 @@ export default function NewForm() {
         />
       </label>
 
-      <label className="font-bold text-black">
-        Category
+      <label className="font-bold">
+        <h1>Category</h1>
         <select
           value={category}
           onChange={(e: any) => setCategory(e.target.value)}
@@ -133,8 +147,8 @@ export default function NewForm() {
         </select>
       </label>
 
-      <label htmlFor="" className="font-bold text-black">
-        Description
+      <label htmlFor="" className="font-bold">
+        <h1>Description</h1>
         <textarea
           name="Description"
           id=""
@@ -191,7 +205,7 @@ export default function NewForm() {
       </label>
 
       <label htmlFor="" className="text-black font-bold">
-        Price
+       <h1>Price</h1>
         <input
           type="text"
           name="Price"
@@ -203,7 +217,7 @@ export default function NewForm() {
       </label>
 
       <label htmlFor="" className="text-black font-bold">
-        Photos
+        <h1>Photos</h1>
       </label>
       <div>
         <ImageTester title={title} page="New" />
