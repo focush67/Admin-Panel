@@ -67,7 +67,7 @@ export default async function handle(request: any, response: any) {
   if (method === "POST") {
     try {
       console.log("INSIDE CATEGORY POST");
-      const { name, parent, properties } = request.body;
+      let { name, parent, properties } = request.body;
       const isPresent = await Category.findOne({ name });
 
       if (isPresent) {
@@ -77,6 +77,7 @@ export default async function handle(request: any, response: any) {
         });
       }
 
+      if(parent === "") parent = null;
       await Category.create({ name, parent, properties });
 
       return response.json({

@@ -3,7 +3,7 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import clientPromise from "@/lib/mongodb";
 
-const adminEmails = [process.env.EMAIL_1];
+const adminEmails = [process.env.EMAIL_1,process.env.EMAIL_2];
 export const options = {
   providers: [
     //Add more providers
@@ -14,7 +14,10 @@ export const options = {
     }),
   ],
 
+  secret:process.env.NEXTAUTH_SECRET,
+
   adapter: MongoDBAdapter(clientPromise),
+
   callbacks:{
     session:({session,token,user}) => {
       if(adminEmails.includes(session?.user?.email)){

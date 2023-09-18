@@ -84,7 +84,7 @@ export default function NewForm() {
   }, []);
 
   const parentCategories = categories.filter((cat: any) => !cat.parent);
-
+  const categoryOptions = categories.map((category:any)=>category.name);
   const handlePropertyChange = (e: any, index: number, field: any) => {
     const newProperties = [...properties];
     newProperties[index][field] = e.target.value;

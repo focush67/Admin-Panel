@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from "react";
-import { storage } from "@/firebaseConfig";
+import { storage } from "../models/firebaseConfig";
 import {
   ref,
   uploadBytes,
@@ -45,12 +45,9 @@ export default function imageTester({
   const uploadImage = () => {
     const name = imageUpload?.name;
     if (imageUpload === null) return;
-    console.log(name);
     const imageRef = ref(storage, `${title}/${name + v4()}`);
     setIsUploading(true);
     uploadBytes(imageRef, imageUpload).then(() => {
-      alert("Image Uploaded");
-      console.log("Image Uploaded");
       setIsUploading(false);
     });
   };
