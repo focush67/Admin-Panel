@@ -7,8 +7,10 @@ const CategorySchema = new Schema({
         {
             name : {type:String,default:""},
             value : {type:String,default:""},
-        }
-    ]
+        },
+    ], 
+},{
+    timestamps:true,
 })
 
 export const Category = models?.Category || model('Category',CategorySchema);

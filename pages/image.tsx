@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import imageUrls from "@/components/ImageUrls";
 import { useState, useEffect } from "react";
-import { storage } from "../models/firebaseConfig";
+import { storage } from "../models/FirebaseConfig";
 import {
   ref,
   uploadBytes,

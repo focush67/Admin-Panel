@@ -1,6 +1,5 @@
-
-
-
+import axios from "axios";
+import { SweetAlert2 } from "sweetalert2-react-content";
 
 export function DeleteButton(props: any) {
   const handleDelete = async () => {
@@ -15,7 +14,7 @@ export function DeleteButton(props: any) {
         }
 
         MySwal.fire("Deleted!", "The item has been deleted.", "success");
-      } catch (error) {
+      } catch (error:any) {
         console.error(error.message);
         MySwal.fire("Error", "An error occurred while deleting.", "error");
       }

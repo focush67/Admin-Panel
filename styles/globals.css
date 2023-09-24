@@ -63,5 +63,60 @@ button{
     @apply p-1 text-sm rounded-md mr-1 px-2 inline-flex gap-1
 }
 
+/* Style the select element */
+select {
+    appearance: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+    color: #333333;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  /* Style the select element on hover and focus */
+  select:hover, select:focus {
+    border-color: #4a90e2; /* Change the border color on hover and focus */
+    background-color: rgba(255, 255, 255, 1); /* Fully opaque white */
+  }
+  
+  /* Style the dropdown options */
+  select option {
+    padding: 0.5rem 1rem;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+    color: #333333;
+  }
+  
+  /* Style the selected option in the dropdown */
+  select option:checked {
+    background-color: #4a90e2; /* Change the background color of the selected option */
+    color: #ffffff; /* Change the text color of the selected option */
+  }
+  
+  /* Style the select arrow (caret) */
+  select::-ms-expand {
+    display: none; /* Remove the default arrow in IE */
+  }
+  
+  select::after {
+    content: '\25BC'; /* Unicode character for a down arrow (caret) */
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #4a90e2; /* Change the arrow color */
+  }
+  
+  /* Add a smooth transition effect for dropdown animation */
+  select option {
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
+  
+  
 
 

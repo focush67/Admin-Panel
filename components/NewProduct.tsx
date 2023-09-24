@@ -12,7 +12,7 @@ export default function NewForm() {
       value: "",
     },
   ]);
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -24,7 +24,14 @@ export default function NewForm() {
   const handleSubmitNew = async (e: any) => {
     const imagesFolder = title;
     e.preventDefault();
-    const data = { title, description, price, imagesFolder, category , properties};
+    const data = {
+      title,
+      description,
+      price,
+      imagesFolder,
+      category,
+      properties,
+    };
     alert(
       "Product Name : " +
         title +
@@ -48,33 +55,33 @@ export default function NewForm() {
     try {
       const name = title;
       const parent = category;
-      const categoryData = { name, parent , properties};
+      const categoryData = { name, parent, properties };
       await axios
         .post("/api/categories", categoryData)
         .then((response: any) => console.log(response))
         .catch((error: any) => console.log(error.message));
-
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
-    } finally{
-        setProperties([{
-            name:"",
-            value:"",
-        }])
+    } finally {
+      setProperties([
+        {
+          name: "",
+          value: "",
+        },
+      ]);
 
-        router.push("/products");
+      router.push("/products");
     }
   };
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        axios
-          .get("/api/categories")
-          .then((response: any) => {
-            setCategories(response.data)
-            setLoading(false)});
+        axios.get("/api/categories").then((response: any) => {
+          setCategories(response.data);
+          setLoading(false);
+        });
       } catch (error: any) {
         console.log(error.message);
       }
@@ -84,7 +91,7 @@ export default function NewForm() {
   }, []);
 
   const parentCategories = categories.filter((cat: any) => !cat.parent);
-  const categoryOptions = categories.map((category:any)=>category.name);
+  const categoryOptions = categories.map((category: any) => category.name);
   const handlePropertyChange = (e: any, index: number, field: any) => {
     const newProperties = [...properties];
     newProperties[index][field] = e.target.value;
@@ -93,15 +100,14 @@ export default function NewForm() {
 
   const handleAddProperty = () => {
     setProperties([...properties, { name: "", value: "" }]);
-
     console.log(properties);
   };
 
-  const handleRemoveProperty = (e:any,index:number) => {
+  const handleRemoveProperty = (e: any, index: number) => {
     const temp = [...properties];
-    temp.splice(index,1);
+    temp.splice(index, 1);
     setProperties(temp);
-  }
+  };
 
   if (loading) {
     return (
@@ -110,7 +116,7 @@ export default function NewForm() {
       </div>
     );
   }
-  
+
   return (
     <form
       onSubmit={handleSubmitNew}
@@ -174,38 +180,32 @@ export default function NewForm() {
               value={property.value}
               onChange={(e) => handlePropertyChange(e, index, "value")}
             />
-            
-              {
-                index > 0 && (
-                  <button className="border-rounded-md px-1 m-2 mb-0 w-[46%] hover:bg-red-900 hover:text-white justify-center" onClick={(e) => handleRemoveProperty(e,index)}>Remove Property</button>
-                )
-              }
-                
-              
-            
-            
+
+            {index > 0 && (
+              <button
+                className="border-rounded-md px-1 m-2 mb-0 w-[46%] hover:bg-red-900 hover:text-white justify-center"
+                onClick={(e) => handleRemoveProperty(e, index)}
+              >
+                Remove Property
+              </button>
+            )}
 
             {index === properties.length - 1 && (
               <div className="flex gap-2 justify-between">
                 <button
-                className="border rounded-md px-1 py-1 m-2 mb-0 w-auto hover:bg-blue-900 hover:text-white justify-center"
-                onClick={handleAddProperty}
-              >
-                <div>Add Property</div>
-              </button>
-
-              
+                  className="border rounded-md px-1 py-1 m-2 mb-0 w-auto hover:bg-blue-900 hover:text-white justify-center"
+                  onClick={handleAddProperty}
+                >
+                  <div>Add Property</div>
+                </button>
               </div>
-              
             )}
-
-            
           </div>
         ))}
       </label>
 
       <label htmlFor="" className="text-black font-bold">
-       <h1>Price</h1>
+        <h1>Price</h1>
         <input
           type="text"
           name="Price"
@@ -222,7 +222,6 @@ export default function NewForm() {
       <div>
         <ImageTester title={title} page="New" />
       </div>
-
     </form>
   );
 }

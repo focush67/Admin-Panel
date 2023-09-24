@@ -67,14 +67,6 @@ export default function EditForm({
       const parent = category;
 
       const categoryData = { name, parent, properties };
-      alert(
-        "Product Name : " +
-          categoryData.name +
-          "\n" +
-          "Parent ID : " +
-          parent +
-          "\n"
-      );
 
       await axios
         .put(`/api/categories/?${productId}`, categoryData)
