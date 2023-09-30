@@ -30,9 +30,7 @@ const CartItemsContainer = styled.div`
 `;
 
 const CartItemImage = styled.img`
-  width: 40px;
-  height: 40px;
-  margin: 3px 3px;
+  height: 4.5rem;
 `;
 
 function OrdersComponent() {
@@ -44,6 +42,7 @@ function OrdersComponent() {
         const response = await fetch('/api/orders');
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           setOrders(data);
         }
       } catch (error) {
@@ -70,7 +69,7 @@ function OrdersComponent() {
               <TableCell>{order._id}</TableCell>
               <TableCell>
                 <CartItemsContainer>
-                  {order.cartItems.map((item) => (
+                  {order.userCart.map((item) => (
                     <CartItemImage key={item._id} src={item.coverPhoto} alt={item.title} />
                   ))}
                 </CartItemsContainer>
@@ -79,7 +78,6 @@ function OrdersComponent() {
                 <div>
                   <p><b>Name:</b> {order.name}</p>
                   <p><b>Email:</b> {order.email}</p>
-                  <p><b>Address:</b> {order.address}</p>
                 </div>
               </TableCell>
             </TableRow>
