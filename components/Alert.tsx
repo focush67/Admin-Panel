@@ -1,9 +1,22 @@
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 export function DeleteButton(props: any) {
   const handleDelete = async () => {
-    const shouldDelete = 
+    const result = await MySwal.fire({
+      icon: "question",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
 
-    if (shouldDelete.isConfirmed) {
+    if (result.isConfirmed) {
       try {
         if (props.origin === "products") {
           await axios.delete(`/api/products/?id=${props.prodId}`);
@@ -12,7 +25,7 @@ export function DeleteButton(props: any) {
         }
 
         MySwal.fire("Deleted!", "The item has been deleted.", "success");
-      } catch (error:any) {
+      } catch (error) {
         console.error(error.message);
         MySwal.fire("Error", "An error occurred while deleting.", "error");
       }
