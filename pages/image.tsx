@@ -13,12 +13,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FaSpinner } from "react-icons/fa";
 const MySwal = withReactContent(Swal);
-export default function imageTester({
+export default function ImageTester({
   title,
-  page,
 }: {
-  title: string;
-  page: string;
+  title: string
 }) {
   const [imageUpload, setImageUpload] = useState<File>();
   const [isUploading, setIsUploading] = useState(false);
