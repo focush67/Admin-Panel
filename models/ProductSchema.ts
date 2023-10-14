@@ -13,6 +13,8 @@ const productSchema = new Schema({
       value: { type: String, default: "" },
     },
   ],
+
+  stripeID: {type: String,required: true},
 },
 {
   timestamps: true,

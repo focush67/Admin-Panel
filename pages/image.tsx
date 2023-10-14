@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import imageUrls from "@/components/ImageUrls";
+
 import { useState, useEffect } from "react";
 import { storage } from "../models/FirebaseConfig";
 import {
@@ -45,7 +44,7 @@ export default function imageTester({
 
   const uploadImage = () => {
     const name = imageUpload?.name;
-    if (imageUpload === null) return;
+    if (imageUpload === null || imageUpload == undefined) return;
     const imageRef = ref(storage, `${title}/${name + v4()}`);
     setIsUploading(true);
     uploadBytes(imageRef, imageUpload).then(() => {

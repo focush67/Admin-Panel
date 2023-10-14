@@ -2,6 +2,10 @@ import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
 import { isAdminRequest } from "./auth/[...nextauth]";
+import stripe from 'stripe';
+
+const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY);
+
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
@@ -26,8 +30,20 @@ export default async function handle(request: any, response: any) {
         const {title,description,price,imagesFolder,category,properties} = request.body;
 
         console.log(title+" "+description+" "+price+" "+category._id);  
-         
-         const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category,properties});
+        
+        let updatedProduct = await Product.findById(prodId);
+
+       
+        const stripeProduct = await stripeClient.products.create({
+            name: title,
+            description,
+          });
+
+        updatedProduct.stripeID = stripeProduct.id;
+
+  
+        
+        const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category,properties,stripeID: updatedProduct.stripeID});
 
         await Category.findByIdAndUpdate(prodId , {
           name : title,
@@ -64,6 +80,15 @@ export default async function handle(request: any, response: any) {
         })
       }
       
+      const stripeProduct = await stripeClient.products.create({
+        name: title,
+        description,
+        
+      });
+
+      const stripeProductID = stripeProduct.id;
+
+
       const createdProduct = await Product.create({
         title,
         description,
@@ -71,6 +96,7 @@ export default async function handle(request: any, response: any) {
         imagesFolder,
         category,
         properties,
+        stripeID: stripeProductID,
       });
 
       const productId = createdProduct._id;

@@ -1,6 +1,4 @@
 import axios from "axios";
-import { SweetAlert2 } from "sweetalert2-react-content";
-
 export function DeleteButton(props: any) {
   const handleDelete = async () => {
     const shouldDelete = 

@@ -223,7 +223,7 @@ export default function EditForm({
       </label>
 
       <label htmlFor="" className="font-bold text-black">
-        <h1>Price</h1>
+        <h1>Price (INR)</h1>
         <input
           type="text"
           name="Price"

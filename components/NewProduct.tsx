@@ -205,7 +205,7 @@ export default function NewForm() {
       </label>
 
       <label htmlFor="" className="text-black font-bold">
-        <h1>Price</h1>
+        <h1>Price (INR)</h1>
         <input
           type="text"
           name="Price"
