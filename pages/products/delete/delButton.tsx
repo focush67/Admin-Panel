@@ -52,3 +52,5 @@ export const DeleteButton = (props: any) => {
     </button>
   );
 }
+
+export default DeleteButton;
