@@ -4,7 +4,7 @@ import withReactContent from "sweetalert2-react-content"; // Import SweetAlert2'
 
 const MySwal = withReactContent(Swal);
 
-export function DeleteButton(props: any) {
+export const DeleteButton = (props: any) => {
   const handleDelete = async () => {
     const shouldDelete = await MySwal.fire({
       icon: "question",
