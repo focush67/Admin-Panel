@@ -1,6 +1,6 @@
 import { useSession, signIn } from "next-auth/react";
 import Nav from "@/components/Navbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Logo from "@/components/Logo";
 export default function Layout({ children }: any) {
   const [showNav, setShowNav] = useState(false);
@@ -10,7 +10,7 @@ export default function Layout({ children }: any) {
       <div className="bg-gray-200 w-screen h-screen flex items-center">
         <div className="text-center w-full">
           <button
-            onClick={() =>signIn()}
+            onClick={() =>signIn("google")}
             className="bg-white p-2 px-4 rounded-lg text-xl font-bold hover:bg-black hover:text-white"
           >
             Login

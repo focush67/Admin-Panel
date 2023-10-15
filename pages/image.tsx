@@ -1,5 +1,4 @@
-
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { storage } from "../models/FirebaseConfig";
 import {
   ref,
@@ -13,10 +12,11 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FaSpinner } from "react-icons/fa";
 const MySwal = withReactContent(Swal);
+
 export default function ImageTester({
   title,
 }: {
-  title: string
+  title: string;
 }) {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -26,23 +26,24 @@ export default function ImageTester({
 
   useEffect(() => {
     setImageList([]);
+    const seenUrls = new Set<string>();
     listAll(imageListRef).then((response: any) => {
       response.items.forEach((item: any) => {
         getDownloadURL(item).then((url) => {
-          console.log(url);
-          setImageList((prev: any) => [...prev, url]);
+          if (!seenUrls.has(url)) {
+            seenUrls.add(url);
+            setImageList((prev: any) => [...prev, url]);
+          }
         });
       });
     });
 
-    return  ()=> {
-      
-    }
+    return () => {};
   }, [isUploading, isDeleting]);
 
   const uploadImage = () => {
     const name = imageUpload?.name;
-    if (imageUpload === null || imageUpload == undefined) return;
+    if (imageUpload === null || imageUpload === undefined) return;
     const imageRef = ref(storage, `${title}/${name + v4()}`);
     setIsUploading(true);
     uploadBytes(imageRef, imageUpload).then(() => {
@@ -51,35 +52,34 @@ export default function ImageTester({
   };
 
   const deleteImage = (url: string) => {
-  MySwal.fire({
-    icon: "question",
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    showCancelButton: true,
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-    reverseButtons: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      
-      const fullPath = url.replace("https://storage.googleapis.com/", "");
+    MySwal.fire({
+      icon: "question",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const fullPath = url.replace("https://storage.googleapis.com/", "");
 
-      const imageRef = ref(storage, fullPath);
-      setIsDeleting(true);
-      deleteObject(imageRef)
-        .then(() => {
-          MySwal.fire("Deleted!", "The image has been deleted.", "success");
-          setIsDeleting(false);
-        })
-        .catch((err: any) => {
-          console.error(err.message);
-          MySwal.fire("Error", "An error occurred while deleting.", "error");
-          setIsDeleting(false);
-        });
-    }
-  });
-};
-
+        const imageRef = ref(storage, fullPath);
+        setIsDeleting(true);
+        deleteObject(imageRef)
+          .then(() => {
+            MySwal.fire("Deleted!", "The image has been deleted.", "success");
+            setIsDeleting(false);
+            setImageList((prevList) => prevList.filter((item) => item !== url));
+          })
+          .catch((err: any) => {
+            console.error(err.message);
+            MySwal.fire("Error", "An error occurred while deleting.", "error");
+            setIsDeleting(false);
+          });
+      }
+    });
+  };
 
   return (
     <div>
@@ -90,7 +90,7 @@ export default function ImageTester({
       />
       <button
         onClick={uploadImage}
-        className=" bg-gray-300 relative text-lg font-bold btn-primary"
+        className="bg-gray-300 relative text-lg font-bold btn-primary"
       >
         Save
       </button>
@@ -105,29 +105,25 @@ export default function ImageTester({
             <p>No images available.</p>
           )
         ) : (
-          
           imageList.map((url) => (
             <div
               key={url}
               className="flex-col p-1"
               style={{ width: "150px", height: "220px" }}
             >
-              <div className="flex justify-center items-center h-full">
-                <img src={url} alt="image" className="max-w-full max-h-full" />
+              <div className="flex justify-center items-center h-[150px]">
+                <img src={url} alt="image" className="max-w-full max-h-[150px]" />
               </div>
-              <div className="flex justify-center mt-2">
+              <div className="flex mt-4 justify-center">
                 <button
-                  className="hover:bg-red-800 hover:text-white"
+                  className="bg-red-900 text-white font-bold"
                   onClick={() => deleteImage(url)}
-                  disabled={isDeleting}
-                > 
-                  {
-                    isDeleting ? (
-                      <FaSpinner className="animate-spin"/>
-                    ) : (
-                      "Delete"
-                    )
-                  }
+                >
+                  {isDeleting ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Delete"
+                  )}
                 </button>
               </div>
             </div>

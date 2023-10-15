@@ -73,7 +73,6 @@ export default function EditForm({
         .then((response: any) => console.log(response))
         .catch((err: any) => console.log(err.message));
 
-      router.push("/products");
     } catch (error: any) {
       console.log("Some error occured");
       console.log(error.message);
