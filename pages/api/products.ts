@@ -4,7 +4,9 @@ import { Category } from "@/models/CategorySchema";
 import { isAdminRequest } from "./auth/[...nextauth]";
 import stripe from 'stripe';
 
-const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY);
+const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY! , {
+  apiVersion: '2023-08-16',
+});
 
 export default async function handle(request: any, response: any) {
   const { method } = request;

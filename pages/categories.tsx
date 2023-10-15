@@ -6,16 +6,31 @@ import mongoose from "mongoose";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const categories = () => {
-  const [properties, setProperties] = useState([
+
+interface Property{
+  name: string;
+  value: string;
+}
+
+interface Category{
+  _id: string;
+  name: string;
+  parent: {
+    _id: string;
+  } | null;
+  properties: Property[];
+}
+
+const Categories = () => {
+  const [properties, setProperties] = useState<Property[]>([
     {
       name: "",
       value: "",
     },
   ]);
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState<Category | null>(null);
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(null);
 
   useEffect(() => {
@@ -64,7 +79,7 @@ const categories = () => {
       console.log(error.message);
     } finally {
       setName("");
-      setParent("");
+      setParent(null);
       setProperties([{
         name:"",
         value:"",
@@ -72,26 +87,7 @@ const categories = () => {
     }
   };
 
-  const editCategory = async (category: Object) => {
-    console.log("editing : ",category._id);
-    setEditing(category);
-    setName(category.name);
-    setParent(category.parent?._id);
-    setProperties(category.properties);
-  };
-
-  const handlePropertyChange = (e: any, index: any, field: any) => {
-    const newProperties = [...properties];
-    newProperties[index][field] = e.target.value;
-    setProperties(newProperties);
-  };
-
-  const handleAddProperty = () => {
-    setProperties([...properties, { name: "", value: "" }]);
-
-    console.log(properties);
-  };
-
+  
   const parentCategories = categories.filter((category) => !category.parent);
 
   return (
@@ -110,11 +106,11 @@ const categories = () => {
         />
         <select
           className="mb-0"
-          value={parent}
+          value={parent ? parent.toString() : ""}
           onChange={(e: any) => setParent(e.target.value)}
         >
           <option value="">No parent category</option>
-          {parentCategories.map((category: String) => (
+          {parentCategories.map((category: any) => (
             <option
               key={category._id}
               value={category._id}
@@ -176,4 +172,4 @@ const categories = () => {
   );
 };
 
-export default categories;
+export default Categories;

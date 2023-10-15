@@ -4,6 +4,13 @@ import { FaSpinner } from "react-icons/fa";
 import mongoose from "mongoose";
 import ImageTester from "@/pages/image";
 import { useRouter } from "next/navigation";
+
+
+interface Property{
+  name: string;
+  value: string;
+}
+
 export default function NewForm() {
   const router = useRouter();
   const [properties, setProperties] = useState([
@@ -91,9 +98,9 @@ export default function NewForm() {
   }, []);
 
   const parentCategories = categories.filter((cat: any) => !cat.parent);
-  const categoryOptions = categories.map((category: any) => category.name);
-  const handlePropertyChange = (e: any, index: number, field: any) => {
-    const newProperties = [...properties];
+
+  const handlePropertyChange = (e: any, index: number, field: "name" | "value") => {
+    const newProperties:Property[] = [...properties];
     newProperties[index][field] = e.target.value;
     setProperties(newProperties);
   };
@@ -141,11 +148,11 @@ export default function NewForm() {
       <label className="font-bold">
         <h1>Category</h1>
         <select
-          value={category}
-          onChange={(e: any) => setCategory(e.target.value)}
+          value={category ? category.toString() : ""}
+          onChange={(e: any) => setCategory(new mongoose.Types.ObjectId(e.target.value))}
         >
           <option value="">None</option>
-          {parentCategories.map((category: String) => (
+          {parentCategories.map((category: any) => (
             <option value={category._id} key={category._id}>
               {category.name}
             </option>
@@ -220,7 +227,7 @@ export default function NewForm() {
         <h1>Photos</h1>
       </label>
       <div>
-        <ImageTester title={title} page="New" />
+        <ImageTester title={title} />
       </div>
     </form>
   );

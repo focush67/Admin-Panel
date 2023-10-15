@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import { storage } from "../models/FirebaseConfig";
 import {
   ref,
@@ -18,9 +18,9 @@ export default function ImageTester({
 }: {
   title: string
 }) {
-  const [imageUpload, setImageUpload] = useState<File>();
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [imageList, setImageList] = useState([]);
+  const [imageList, setImageList] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const imageListRef = ref(storage, `${title}/`);
 

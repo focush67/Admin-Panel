@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import ImageTester from "@/pages/image";
 import mongoose from "mongoose";
+
+export interface Property{
+  name: string;
+  value: string;
+}
 export default function EditForm({
   existingTitle,
   existingDescription,
@@ -17,13 +22,8 @@ export default function EditForm({
   existingDescription: string;
   existingPrice: string;
   existingImagesFolder: string;
-  existingCategory: mongoose.Types.ObjectId;
-  existingProperties: [
-    {
-      name: String;
-      value: String;
-    }
-  ];
+  existingCategory: mongoose.Types.ObjectId | null;
+  existingProperties: Property[],
 }) {
   const productId = useSearchParams();
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function EditForm({
   const [category, setCategory] = useState<mongoose.Types.ObjectId | null>(
     existingCategory || null
   );
-  const [properties, setProperties] = useState(
+  const [properties, setProperties] = useState<Property[]>(
     existingProperties || [
       {
         name: "",
@@ -90,16 +90,14 @@ export default function EditForm({
         console.log(error.message);
       }
     };
-
     fetchCategories();
   }, []);
 
-  const parentCategories = categories.filter((cat: any) => !cat.parent);
+  const parentCategories:Property[] = categories.filter((cat: any) => !cat.parent);
 
   useEffect(() => {
     axios.get(`/api/products/?${productId}`).then((response: any) => {
       const data = response.data;
-      console.log(data);
       setTitle(data.title);
       setDescription(data.description);
       setPrice(data.price);
@@ -110,8 +108,8 @@ export default function EditForm({
     });
   }, [productId]);
 
-  const handlePropertyChange = (e: any, index: any, field: any) => {
-    const newProperties = [...properties];
+  const handlePropertyChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, field: "name" | "value") => {
+    const newProperties:Property[] = [...properties];
     newProperties[index][field] = e.target.value;
     setProperties(newProperties);
   };
@@ -169,11 +167,10 @@ export default function EditForm({
       <label className="font-bold text-black">
         <h1>Category</h1>
         <select
-          value={category}
-          onChange={(e: any) => setCategory(e.target.value)}
+          value={category ? category.toString() : ""}
+          onChange={(e: any) => setCategory(new mongoose.Types.ObjectId(e.target.value))}
         >
-          <option value="">None</option>
-          {parentCategories.map((category: String) => (
+          {parentCategories.map((category: any) => (
             <option value={category._id} key={category._id}>
               {category.name}
             </option>
@@ -237,7 +234,7 @@ export default function EditForm({
         <h1>Photos</h1>
       </label>
       <div>
-        <ImageTester title={title} page="Edit" />
+        <ImageTester title={title} />
       </div>
     </form>
     </div>

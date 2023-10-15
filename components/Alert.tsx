@@ -25,7 +25,7 @@ export function DeleteButton(props: any) {
         }
 
         MySwal.fire("Deleted!", "The item has been deleted.", "success");
-      } catch (error) {
+      } catch (error:any) {
         console.error(error.message);
         MySwal.fire("Error", "An error occurred while deleting.", "error");
       }

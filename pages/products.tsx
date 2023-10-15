@@ -45,7 +45,7 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product: object) => (
+          {products.map((product: any) => (
             <tr>
               <td>{product.title}</td>
               <td>

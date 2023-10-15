@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -34,7 +35,7 @@ const CartItemImage = styled.img`
 `;
 
 function OrdersComponent() {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<any>([]);
 
   useEffect(() => {
     async function fetchOrders() {
@@ -42,7 +43,6 @@ function OrdersComponent() {
         const response = await fetch('/api/orders');
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setOrders(data);
         }
       } catch (error) {
@@ -64,20 +64,28 @@ function OrdersComponent() {
           </TableRow>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <TableRow key={order._id}>
+          {orders.map((order:any,index:number) => (
+            <TableRow key={index}>
               <TableCell>{order._id}</TableCell>
               <TableCell>
                 <CartItemsContainer>
-                  {order.userCart.map((item) => (
-                    <CartItemImage key={item._id} src={item.coverPhoto} alt={item.title} />
+                  {order.userCart.map((item:any) => (
+                    <CartItemImage
+                      key={item._id}
+                      src={item.coverPhoto}
+                      alt={item.title}
+                    />
                   ))}
                 </CartItemsContainer>
               </TableCell>
               <TableCell>
                 <div>
-                  <p><b>Name:</b> {order.name}</p>
-                  <p><b>Email:</b> {order.email}</p>
+                  <p>
+                    <b>Name:</b> {order.name}
+                  </p>
+                  <p>
+                    <b>Email:</b> {order.email}
+                  </p>
                 </div>
               </TableCell>
             </TableRow>
