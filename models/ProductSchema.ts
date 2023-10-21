@@ -14,7 +14,7 @@ const productSchema = new Schema({
     },
   ],
 
-  stripeID: {type: String,required: true},
+  stripeProductID: {type: String,required: true},
 },
 {
   timestamps: true,

@@ -2,19 +2,19 @@ import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
 import { isAdminRequest } from "./auth/[...nextauth]";
-import stripe from 'stripe';
+import stripe from "stripe";
 
-const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY! , {
-  apiVersion: '2023-08-16',
+const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY!, {
+  apiVersion: "2023-08-16",
 });
 
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
-  await isAdminRequest(request,response);
+  await isAdminRequest(request, response);
   console.log("DB Connected");
 
-// GET REQUEST
+  // GET REQUEST
   if (method === "GET") {
     console.log("INSIDE GET");
     if (request.query?.id) {
@@ -23,73 +23,84 @@ export default async function handle(request: any, response: any) {
     response.json(await Product.find());
   }
 
-// PUT REQUEST
+  // PUT REQUEST
   if (method === "PUT") {
     try {
-        const prodId = request.query.id;
-        console.log("INSIDE PRODUCT PUT");
-  
-        const {title,description,price,imagesFolder,category,properties} = request.body;
+      const prodId = request.query.id;
+      console.log("INSIDE PRODUCT PUT");
 
-        console.log(title+" "+description+" "+price+" "+category._id);  
-        
-        let updatedProduct = await Product.findById(prodId);
+      const { title, description, price, imagesFolder, category, properties } = request.body;
 
-       
-        const stripeProduct = await stripeClient.products.create({
-            name: title,
-            description,
-          });
+      console.log(title + " " + description + " " + price + " " + category._id);
 
-        updatedProduct.stripeID = stripeProduct.id;
+      let updatedProduct = await Product.findById(prodId);
 
-  
-        
-        const res = await Product.findByIdAndUpdate(prodId,{title,description,price,imagesFolder,category,properties,stripeID: updatedProduct.stripeID});
-
-        await Category.findByIdAndUpdate(prodId , {
-          name : title,
-          parent : category,
-          properties,
-        });
-
-        console.log(res);
+      if (!updatedProduct) {
         return response.json({
-          message: "Put request success",
-          status: 200,
+          message: "Product not found",
+          status: 404,
         });
-      
+      }
+
+      if(!updatedProduct.stripeProductID){
+        const stripeProduct = await stripeClient.products.create({
+          name: title,
+          description,
+        });
+
+        updatedProduct.stripeProductID = stripeProduct.id;
+      }
+
+      const res = await Product.findByIdAndUpdate(prodId, {
+        title,
+        description,
+        price,
+        imagesFolder,
+        category,
+        properties,
+        stripeProductID: updatedProduct.stripeProductID,
+      });
+
+      await Category.findByIdAndUpdate(prodId, {
+        name: title,
+        parent: category,
+        properties,
+      });
+
+      console.log(res);
+      return response.json({
+        message: "Put request success",
+        status: 200,
+      });
     } catch (error: any) {
       console.log(error.message);
     }
   }
 
-
-//POST REQUEST
+  //POST REQUEST
   if (method === "POST") {
     try {
-      const {title, description, price , imagesFolder,category,properties} = request.body;
-      console.log("INSIDE PRODUCT POST : "+title,description,price,imagesFolder,category);
+      const { title, description, price, imagesFolder, category, properties } = request.body;
+        
+      console.log("INSIDE POST: ",{title,price,imagesFolder,category});
 
-      const isThereAlready = await Product.findOne({title});
+      const isThereAlready = await Product.findOne({ title });
 
-      if(isThereAlready){
+      if (isThereAlready) {
         console.log("Product already exists");
         return response.json({
-          message:"User already exists",
-          status:400,
-          success:false,
-        })
+          message: "User already exists",
+          status: 400,
+          success: false,
+        });
       }
-      
+
       const stripeProduct = await stripeClient.products.create({
         name: title,
         description,
-        
       });
 
       const stripeProductID = stripeProduct.id;
-
 
       const createdProduct = await Product.create({
         title,
@@ -98,33 +109,34 @@ export default async function handle(request: any, response: any) {
         imagesFolder,
         category,
         properties,
-        stripeID: stripeProductID,
+        stripeProductID,
       });
 
       const productId = createdProduct._id;
 
       await Category.create({
-        _id : productId,
-        name : title,
-        parent : category,
-        properties
-      })
+        _id: productId,
+        name: title,
+        parent: category,
+        properties,
+      });
 
       return response.json({
         message: "Product created successfully",
         status: 200,
         success: true,
+        productDetails: createdProduct,
       });
     } catch (error: any) {
       console.log(error.message);
       return response.json({
         status: 500,
-        message: "Some error occured",
+        message: error,
       });
     }
   }
 
-// DELETE REQUEST
+  // DELETE REQUEST
   if (method === "DELETE") {
     try {
       console.log("INSIDE PRODUCT DELETE");
@@ -133,9 +145,9 @@ export default async function handle(request: any, response: any) {
       await Product.findByIdAndDelete(id2);
       await Category.findByIdAndDelete(id2);
       return response.json({
-        message:"Deleted Product",
-        status:201,
-      })
+        message: "Deleted Product",
+        status: 201,
+      });
     } catch (error: any) {
       console.log(error.message);
     }

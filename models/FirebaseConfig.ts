@@ -1,14 +1,13 @@
 import { initializeApp } from "firebase/app";
-import {getStorage} from "firebase/storage";
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  apiKey: "AIzaSyD4bNcbF7XIDYb-zqKAP3yXoK04ZddRpBE",
-  authDomain: "frontend-43f86.firebaseapp.com",
-  projectId: "frontend-43f86",
-  storageBucket: "frontend-43f86.appspot.com",
-  messagingSenderId: "695465871072",
-  appId: "1:695465871072:web:3e6bbc17db1a2149053285",
-  measurementId: "G-8KH6YNQQD4"
+  apiKey: "AIzaSyAxTe35ut6nRUJhIcpgCbaR0C29Hzm1DrA",
+  authDomain: "admin-panel-20-oct.firebaseapp.com",
+  projectId: "admin-panel-20-oct",
+  storageBucket: "admin-panel-20-oct.appspot.com",
+  messagingSenderId: "452214874490",
+  appId: "1:452214874490:web:3f24836c68c976d7f536c3"
 };
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
