@@ -29,7 +29,7 @@ const ImageList = ({title}:{title:string}) => {
   return (
     <div>
         {imageList.map((url,index) => (
-            <div className='flex justify-center'>
+            <div className='flex justify-center' key={index}>
                 <img src={url} alt="image" key={index} style={{
                 height:'8em',
                 width:"auto",
