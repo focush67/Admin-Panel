@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { storage } from "../models/FirebaseConfig";
+import { productStorage } from "../models/FirebaseConfig";
 import {
   ref,
   uploadBytes,
@@ -22,7 +22,7 @@ export default function ImageTester({
   const [isUploading, setIsUploading] = useState(false);
   const [imageList, setImageList] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
-  const imageListRef = ref(storage, `${title}/`);
+  const imageListRef = ref(productStorage, `${title}/`);
 
   useEffect(() => {
     setImageList([]);
@@ -44,7 +44,7 @@ export default function ImageTester({
   const uploadImage = () => {
     const name = imageUpload?.name;
     if (imageUpload === null || imageUpload === undefined) return;
-    const imageRef = ref(storage, `${title}/${name + v4()}`);
+    const imageRef = ref(productStorage, `${title}/${name + v4()}`);
     setIsUploading(true);
     uploadBytes(imageRef, imageUpload).then(() => {
       setIsUploading(false);
@@ -64,7 +64,7 @@ export default function ImageTester({
       if (result.isConfirmed) {
         const fullPath = url.replace("https://storage.googleapis.com/", "");
 
-        const imageRef = ref(storage, fullPath);
+        const imageRef = ref(productStorage, fullPath);
         setIsDeleting(true);
         deleteObject(imageRef)
           .then(() => {

@@ -5,7 +5,10 @@ import { DeleteButton } from "./products/delete/delButton";
 import mongoose from "mongoose";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import CategoryUpload from "./imageCategory";
+import { Category } from "@/models/CategorySchema";
+import { listAll, getDownloadURL } from "firebase/storage";
+import ImageList from "./ImageListRefsCat";
 
 interface Property{
   name: string;
@@ -32,6 +35,7 @@ const Categories = () => {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,34 +104,22 @@ const Categories = () => {
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
           type="text"
-          className="mb-0"
+          className="mb-0 w-[50%]"
           value={name}
           onChange={(e: any) => setName(e.target.value)}
         />
         <select
-          className="mb-0"
+          className="mb-0 w-[10%]"
           value={parent ? parent.toString() : ""}
           onChange={(e: any) => setParent(e.target.value)}
         >
-          <option value="">No parent category</option>
-          {parentCategories.map((category: any) => (
-            <option
-              key={category._id}
-              value={category._id}
-              className="hover:bg-blue-800"
-            >
-              {category.name}
-            </option>
-          ))}
+          <option value=""></option>
         </select>
 
-        <button className="border rounded-md px-1 m-2 mb-0 w-[20%] hover:bg-blue-900 hover:text-white justify-center">
-          <div>Save</div>
-        </button>
-      </form>
+          <CategoryUpload title={name}/>
 
-      
-      
+       
+      </form>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         {parentCategories.map((parentCategory) => (
@@ -139,10 +131,12 @@ const Categories = () => {
               padding:"10px",
             }}
           >
-            <div className="flex gap-4">
-              <h2 className="font-semibold">{parentCategory.name}</h2>
+            <div className="flex gap-4 justify-center">
+              <h2 className="font-bold italic">{parentCategory.name.toUpperCase()}</h2>
               <DeleteButton prodId={parentCategory._id} origin="categories" />
             </div>
+
+            <ImageList title={parentCategory.name}/>
 
             <ul className="mt-3">
               {categories
