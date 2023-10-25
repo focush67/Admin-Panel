@@ -1,1 +1,1 @@
-The project has been deployed at https://admin-panel-g5a3b6g91-focush67.vercel.app
+The project has been deployed at https://vercel.com/focush67/admin-panel/CcRViUXuvzggcqUuVv79s8XrYAba
