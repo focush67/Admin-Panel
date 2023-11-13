@@ -37,13 +37,3 @@ export const options = {
 };
 
 export default NextAuth(options);
-
-export async function isAdminRequest(request, response) {
-  const session = await getServerSession(request, response, options);
-
-  if (!adminEmails.includes(session?.user?.email)) {
-    response.status(401);
-    response.end();
-    throw "Not Admin Request";
-  }
-}

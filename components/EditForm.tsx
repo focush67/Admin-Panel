@@ -229,12 +229,14 @@ export default function EditForm({
         />
       </label>
 
-      <label htmlFor="" className="font-bold text-black">
+      {/* <label htmlFor="" className="font-bold text-black">
         <h1>Photos</h1>
       </label>
       <div>
         <ImageTester title={title} />
-      </div>
+      </div> */}
+
+      <button>Submit</button>
     </form>
     </div>
   );

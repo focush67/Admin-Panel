@@ -1,6 +1,7 @@
 import { Schema, model, models } from "mongoose";
 import mongoose from "mongoose";
 const CategorySchema = new Schema({
+    creator: {type: String,required: true,default:"sparshv70@gmail.com"},
     name : {type:String , required:true},
     parent : {type:mongoose.Types.ObjectId , ref: 'Category', default:null},
     properties:[

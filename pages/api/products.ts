@@ -1,8 +1,9 @@
 import { Product } from "@/models/ProductSchema";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
-import { isAdminRequest } from "./auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 import stripe from "stripe";
+import { options } from "./auth/[...nextauth]";
 
 const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY!, {
   apiVersion: "2023-08-16",
@@ -11,7 +12,6 @@ const stripeClient = new stripe(process.env.NEXT_PUBLIC_STRIPE_PRIVATE_KEY!, {
 export default async function handle(request: any, response: any) {
   const { method } = request;
   mongooseConnect();
-  await isAdminRequest(request, response);
   console.log("DB Connected");
 
   // GET REQUEST
@@ -20,7 +20,12 @@ export default async function handle(request: any, response: any) {
     if (request.query?.id) {
       response.json(await Product.findOne({ _id: request.query?.id }));
     }
-    response.json(await Product.find());
+    else{
+      if(request.query?.creator)
+      {
+        response.json(await Product.find({creator: request?.query?.creator}));
+      }
+    }
   }
 
   // PUT REQUEST
@@ -29,7 +34,7 @@ export default async function handle(request: any, response: any) {
       const prodId = request.query.id;
       console.log("INSIDE PRODUCT PUT");
 
-      const { title, description, price, imagesFolder, category, properties } = request.body;
+      const {creator, title, description, price, imagesFolder, category, properties } = request.body;
 
       console.log(title + " " + description + " " + price + " " + category._id);
 
@@ -52,6 +57,7 @@ export default async function handle(request: any, response: any) {
       }
 
       const res = await Product.findByIdAndUpdate(prodId, {
+        creator,
         title,
         description,
         price,
@@ -62,6 +68,7 @@ export default async function handle(request: any, response: any) {
       });
 
       await Category.findByIdAndUpdate(prodId, {
+        creator,
         name: title,
         parent: category,
         properties,
@@ -80,7 +87,7 @@ export default async function handle(request: any, response: any) {
   //POST REQUEST
   if (method === "POST") {
     try {
-      const { title, description, price, imagesFolder, category, properties } = request.body;
+      const {creator, title, description, price, imagesFolder, category, properties } = request.body;
         
       console.log("INSIDE POST: ",{title,price,imagesFolder,category});
 
@@ -103,6 +110,7 @@ export default async function handle(request: any, response: any) {
       const stripeProductID = stripeProduct.id;
 
       const createdProduct = await Product.create({
+        creator,
         title,
         description,
         price,
@@ -118,6 +126,7 @@ export default async function handle(request: any, response: any) {
         _id: productId,
         name: title,
         parent: category,
+        creator,
         properties,
       });
 

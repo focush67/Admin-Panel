@@ -4,14 +4,16 @@ import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DeleteButton } from "./products/delete/delButton";
+import { useSession } from "next-auth/react";
 const Products = () => {
   const [products, setProducts] = useState([]);
-  
+  const {data: session} = useSession();
+  console.log("Session: ",session);
   useEffect(() => {
     const fetchData = async () => {
       try{
-        axios.get("/api/products").then((response) => {
-      setProducts(response.data);
+        axios.get(`/api/products/?creator=${session?.user?.email}`).then((response) => {
+        setProducts(response.data);
     });
       } catch(error:any)
       {

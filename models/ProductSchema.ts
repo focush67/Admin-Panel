@@ -1,7 +1,9 @@
 import { model, Schema, models } from "mongoose";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
 
 const productSchema = new Schema({
+  creator: {type: String,required: true},
   title: { type: String, required: true },
   description: String,
   price: { type: String, required: true },

@@ -1,17 +1,15 @@
 import connect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
-import { isAdminRequest, options } from "./auth/[...nextauth]";
 export default async function handle(request: any, response: any) {
   const { method } = request;
   connect();
-  await isAdminRequest(request,response);
   // GET Request
   if (method === "GET") {
     if (request.query?.id) {
       response.json(await Category.findOne({ _id: request.query?.id }));
     }
 
-    response.json(await Category.find().populate("parent"));
+    response.json(await Category.find({creator: request?.query?.creator}).populate("parent"));
   }
 
   // PUT Request
@@ -19,7 +17,7 @@ export default async function handle(request: any, response: any) {
     try {
       console.log("INSIDE CATEGORY PUT");
       const _id = request.query?.id;
-      const { name, parent, properties } = request.body;
+      const { creator,name, parent, properties } = request.body;
       console.log(name + " " + parent);
       const exists = Category.findById(_id);
 
@@ -33,6 +31,7 @@ export default async function handle(request: any, response: any) {
         )
       }
       const updatedCategory = await Category.findByIdAndUpdate(_id, {
+        creator,
         name,
         parent,
         properties,

@@ -7,8 +7,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CategoryUpload from "./imageCategory";
 import { Category } from "@/models/CategorySchema";
-import { listAll, getDownloadURL } from "firebase/storage";
 import ImageList from "./ImageListRefsCat";
+import { useSession } from "next-auth/react";
 
 interface Property{
   name: string;
@@ -16,6 +16,7 @@ interface Property{
 }
 
 interface Category{
+  creator: string;
   _id: string;
   name: string;
   parent: {
@@ -35,12 +36,12 @@ const Categories = () => {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [parent, setParent] = useState<mongoose.Types.ObjectId | null>(null);
-
+  const {data: session} = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await axios.get("/api/categories/").then((response: any) => {
+        await axios.get(`/api/categories/?creator=${session?.user?.email}`).then((response: any) => {
           setCategories(response.data);
         });
       } catch (error: any) {
@@ -58,7 +59,8 @@ const Categories = () => {
   const saveCategory = async (event: any) => {
     try {
       event.preventDefault();
-      const data = { name, parent,properties };
+      const creator = session?.user?.email;
+      const data = {creator, name, parent,properties };
       if (editing) {
         await axios
           .put("/api/categories", {...data , _id : editing._id})
@@ -118,7 +120,6 @@ const Categories = () => {
 
           <CategoryUpload title={name}/>
 
-       
       </form>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
