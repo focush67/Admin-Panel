@@ -27,7 +27,7 @@ export default function CategoryUpload({
 
 
   return (
-      <div className="flex">
+      <div className="flex items-center">
       <input
         type="file"
         onChange={(event: any) => setImageUpload(event.target.files[0])}
@@ -35,7 +35,7 @@ export default function CategoryUpload({
       />
       <button
         onClick={uploadImage}
-        className="bg-gray-300 relative text-lg font-bold hover:text-white hover:bg-blue-900"
+        className="bg-gray-400 hover:bg-gray-800 hover:text-white"
       >
         <div className="text-center p-1">Save</div>
       </button>

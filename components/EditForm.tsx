@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import ImageTester from "@/pages/image";
 import mongoose from "mongoose";
+import { useSession } from "next-auth/react";
 
 export interface Property{
   name: string;
@@ -26,6 +27,7 @@ export default function EditForm({
   existingProperties: Property[],
 }) {
   const productId = useSearchParams();
+  const {data: session} = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(existingTitle || "T");
@@ -83,7 +85,7 @@ export default function EditForm({
     const fetchCategories = async () => {
       try {
         axios
-          .get("/api/categories")
+          .get(`/api/categories/?creator=${session?.user?.email}`)
           .then((response: any) => setCategories(response.data));
       } catch (error: any) {
         console.log(error.message);
@@ -236,7 +238,12 @@ export default function EditForm({
         <ImageTester title={title} />
       </div> */}
 
-      <button>Submit</button>
+<button
+        
+        className="bg-gray-300 relative text-lg font-bold btn-primary"
+      >
+        Save
+      </button>
     </form>
     </div>
   );

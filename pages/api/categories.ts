@@ -1,15 +1,35 @@
 import connect from "@/lib/mongoose";
 import { Category } from "@/models/CategorySchema";
+import { Product } from "@/models/ProductSchema";
 export default async function handle(request: any, response: any) {
   const { method } = request;
   connect();
   // GET Request
-  if (method === "GET") {
-    if (request.query?.id) {
-      response.json(await Category.findOne({ _id: request.query?.id }));
+  if(method === "GET"){
+    if(request?.query?.id){
+      const category = await Category.findOne({_id: request?.query?.id});
+      return response.json(category);
     }
 
-    response.json(await Category.find({creator: request?.query?.creator}).populate("parent"));
+    try {
+      const {creator,parentCategory} = request.query;
+      if(parentCategory){
+        const products = await Product.find({
+          category: parentCategory,
+          creator
+        });
+        return response.json(products);
+      }
+      const categories = await Category.find({
+        creator,
+        parent: null
+      });
+      return response.json(categories);
+    } catch (error) {
+      return response.json({
+        message: "Error from categories backend"
+      });
+    }
   }
 
   // PUT Request

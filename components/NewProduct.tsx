@@ -4,7 +4,7 @@ import { FaSpinner } from "react-icons/fa";
 import mongoose from "mongoose";
 import ImageTester from "@/pages/image";
 import { useRouter } from "next/navigation";
-
+import { useSession } from "next-auth/react";
 
 interface Property{
   name: string;
@@ -19,6 +19,7 @@ export default function NewForm() {
       value: "",
     },
   ]);
+  const {data: session} = useSession();
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -85,7 +86,8 @@ export default function NewForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        axios.get("/api/categories").then((response: any) => {
+        axios.get(`/api/categories/?creator=${session?.user?.email}`).then((response: any) => {
+          console.log(response.data);
           setCategories(response.data);
           setLoading(false);
         });
